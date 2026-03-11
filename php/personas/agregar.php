@@ -28,7 +28,10 @@ if(!empty($_POST))
 
 				if($_POST['source'] == 'integral')
 				{
-					print "<script>alert(\"Agregado exitosamente.\");window.location='../../buscar_estudiante.php?s=".$_POST[documento_identidad]."&opt=".$_POST['opcion']."';</script>";
+					
+					print "<script>
+					var opt;alert('Agregado exitosamente.');window.location='../../buscar_estudiante.php?s=".$_POST['documento_identidad']."&opt=".$_POST['opcion']."';</script>";
+					
 				}
 				else
 				{
@@ -53,7 +56,8 @@ if(!empty($_POST))
 }
 else
 {
-	echo "if post";
+
+	echo "if post vacio";
 }
 
 ?>

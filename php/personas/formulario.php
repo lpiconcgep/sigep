@@ -16,9 +16,19 @@ if($query->num_rows>0){
 while ($r=$query->fetch_object()){
   $person=$r;
   break;
-}
-
   }
+
+}
+/*
+if(preg_match_all("/(\d*[0-9]{2})/", $cedula, $resultado)){
+
+    print_r($resultado);
+} else {
+
+    echo "No hubo resultado";
+}*/
+
+
 ?>
 
 <?php if($person!=null):?>
@@ -31,22 +41,26 @@ while ($r=$query->fetch_object()){
           $sel['0'] = '';
           $sel['1'] = '';
           $sel['2'] = '';
+          $sel['3'] = '';
           if( $person->tipo_documento_identidad == 0 )
             $sel['0'] = 'selected = selected';
           else if($person->tipo_documento_identidad == 1)
             $sel['1'] = 'selected = selected';
-          else
+          else if($person->tipo_documento_identidad == 2)
             $sel['2'] = 'selected = selected';
+          else
+            $sel['3'] = 'selected = selected';
         ?>
         <option <?php echo $sel['0']; ?> value="0">Cedula Venezolana</option>
         <option <?php echo $sel['1']; ?> value="1">Cedula Venezolana Extranjero</option>
         <option <?php echo $sel['2']; ?> value="2">Cedula del Pais origen</option>
+        <option <?php echo $sel['3']; ?> value="3">Pasaporte</option>
       </select>
     </div>
 
     <div class="form-group col-sm-6">
       <label for="name">N. Documento Identidad <span style='color: red'>*</span></label>
-      <input type="text" class="form-control" name="documento_identidad" value="<?php echo $person->documento_identidad; ?>" required>
+      <input type="text" class="form-control" name="documento_identidad" id="documento_identidad" value="<?php echo $person->documento_identidad; ?>" required>
     </div>
     <div class="form-group col-sm-6">
       <label for="name">Fecha Vencimiento Doc. Identidad </label>

@@ -5,7 +5,8 @@
   $sql= "select * from estudiante_programa where id = ".$_GET["estudiante_id"];
   $query = $con->query($sql);
 
-  $sql1= "select * from programa";
+
+  $sql1= "select * from programa ORDER BY nombre ASC";
   $query1 = $con->query($sql1);
 
   $sql2= "select * from condicion_estudiante";

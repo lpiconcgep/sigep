@@ -19,12 +19,16 @@
     <ul class="nav navbar-nav">
       <li><a href="/sigep_prototipo/personas.php">PERSONAS</a></li>
       <li><a href="/sigep_prototipo/postgrados.php">POSTGRADOS</a></li>
-      <li><a href="/sigep_prototipo/index.php">REGISTRO NUEVO INGRESO</a></li>
+      <li><a href="/sigep_prototipo/index.php">REGISTRO DE ESTUDIANTES</a></li>
       <li><a href="/sigep_prototipo/reportes.php">REPORTES</a></li>
+      <?php if($_SESSION['user_id'] == 1) { ?>
+        <li><a href="/sigep_prototipo/cierre_expediente.php">CIERRE</a></li>
+      <?php } ?>
     </ul>
-    <form class="navbar-form navbar-left" role="search" action="./buscar.php">
+    <form class="navbar-form navbar-left" role="search" action="/sigep_prototipo/buscar.php">
       <div class="form-group">
-        <input type="text" name="s" class="form-control" placeholder="Buscar">
+        <input type="search" maxlength="10" name="s" class="form-control"  placeholder="Buscar">
+
       </div>
       <button type="submit" class="btn btn-default">&nbsp;<i class="glyphicon glyphicon-search"></i>&nbsp;</button>
     </form>

@@ -3,7 +3,8 @@ session_start();
 ?>
 <html>
 	<head>
-		<title>.: SIGEP - Sistema Integrado de Gesti&oacute;n de Postgrados :.</title>
+
+		<title>.: SIGEP V2 - Sistema Integrado de Gesti&oacute;n de Postgrados :.</title>
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 		<script src="js/jquery.min.js"></script>
@@ -58,6 +59,7 @@ session_start();
 		      </div>
 		      <div class="col-sm-3 col-sm-offset-1" id="btn-egreso">
 		        <a onclick="javacript:mostrar_egreso()" style="cursor: pointer">
+
 		          <div style="border: 1px solid #E6E6E9; background-color: #e3e3e3; border-radius: 4px; padding: 15px; text-align: center ">
 		            <span style="top: 0px;" class="glyphicon glyphicon-user"></span>
 		            <br />
@@ -66,7 +68,6 @@ session_start();
 		        </a>
 		      </div>
 		  </div>
-
 		  <div class="row" id="parcial_cedula" style="display: none">
 		  	<br><br>
 		  	<p style="text-align: center; font-weight: bold">Escriba el N&uacute;mero de C&eacute;dula</p>
@@ -74,7 +75,8 @@ session_start();
 
 		  		<form class="navbar-form navbar-left" role="search" action="./buscar_estudiante.php" method="post">
 			      <div class="form-group">
-			        <input type="text" name="s" size="40" class="form-control" placeholder="Escriba solo numeros, sin puntos ni guiones">
+
+			        <input type="text" name="s" id="cedula" onblur="javascript:validarCedula()" size="40" class="form-control" placeholder="Escriba solo numeros, sin puntos ni guiones">
 			     	<input type="hidden" name="opcion" id="opcion" value="" />
 			      </div>
 			      <button type="submit" class="btn btn-default">&nbsp;<i class="glyphicon glyphicon-search"></i>&nbsp;</button>

@@ -23,9 +23,13 @@ $query = $con->query($sql1);
 	<td><?php echo $r["primer_nombre"]." ".$r["segundo_nombre"]; ?></td>
 	<td><?php echo $r["sexo"]; ?></td>
 	<td style="width:150px;">
-		<a href="./editar.php?id=<?php echo $r["id"];?>" class="btn btn-sm btn-warning">Editar</a>
-		<a href="#" id="del-<?php echo $r["id"];?>" class="btn btn-sm btn-danger">Eliminar</a>
-		<script>
+		<!--a href="./editar.php?id=<?php echo $r["id"];?>" class="btn btn-sm btn-warning">Editar</a-->
+		<a href="./php/personas/editar.php?sour=edit&s=<?php echo $_GET['s'];?>&id=<?php echo $r["id"];?>" class="btn btn-sm btn-warning">Editar</a>
+		<a href="estudios.php?s=<?php echo $_GET['s'];?>&id=<?php echo $r["id"];?>" class="btn btn-sm btn-primary">Estudios</a>
+
+		<!--a href="#" id="del-<?php echo $r["id"];?>" class="btn btn-sm btn-danger">Eliminar</a-->
+		<!--script>
+>>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 		$("#del-"+<?php echo $r["id"];?>).click(function(e){
 			e.preventDefault();
 			p = confirm("Estas seguro?");
@@ -35,7 +39,8 @@ $query = $con->query($sql1);
 			}
 
 		});
-		</script>
+		</script-->
+		
 	</td>
 </tr>
 <?php endwhile;?>

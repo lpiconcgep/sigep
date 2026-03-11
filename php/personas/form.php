@@ -26,8 +26,10 @@
     <label for="name">Tipo Documento Identidad <span style='color: red'>*</span></label>
     <select class="form-control" name="tipo_documento_identidad">
       <option value="0">Cedula Venezolana</option>
-      <option value="1">Cedula Venezolana Extranjero</option>
+      <option value="1">Cedula Venezolana Extranjera</option>
       <option value="2">Cedula del Pais origen</option>
+      <option value="3">Pasaporte</option>
+
     </select>
   </div>
 

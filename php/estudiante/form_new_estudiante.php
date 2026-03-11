@@ -95,7 +95,11 @@
 
   <input type="hidden" name="id" value="<?php echo $persona->id; ?>">
   <input type="hidden" name="source" value="<?php echo $source; ?>">
-  <input type="hidden" name="opcion" value="<?php echo $_POST['opcion']; ?>" >
+
+  <!--input type="hidden" name="opcion" value="<?php echo $_POST['opcion']; ?>" NO ESTOY SEGURA DE BORRAR ESTA LINEA --> 
+
+  <input type="hidden" name="opcion" value="<?php echo $opcio; ?>" >
+
   <input type="hidden" name="documento_identidad" value="<?php echo $documento_identidad; ?>">
 
   <button type="submit" class="btn btn-primary">Agregar</button>

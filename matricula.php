@@ -35,7 +35,8 @@
     
     $source = $_GET['source'];
     ?>
-    <a href="php/reportes/matricula.php" class="btn btn-danger">Ir atr&aacute;s</a>
+
+    <a href="php/reportes/matricula.php" class="btn btn-danger hidden-print">Ir atr&aacute;s</a>
     <?php } ?>
 </div>
 <div class="col-md-12">

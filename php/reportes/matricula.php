@@ -45,21 +45,24 @@
 
   <div class="container" style="padding: 10px 0px">
     <div class="row">
-      <div class="col-sm-3 col-sm-offset-2">
-        <a href="matricula.php">
+      <div class="row">
+      <div class="col-sm-4 col-sm-offset-1">
+        <a href="php/reportes/matricula.php">
           <div style="border: 1px solid #D4E0EF; background-color: #e3e3e3; border-radius: 4px; padding: 15px; text-align: center  ">
             <span style="top: 0px;" class="glyphicon glyphicon-user"></span>
             <br />
-            MATRICULA
+            MATRÍCULA
           </div>
         </a>
       </div>
-      <div class="col-sm-3 col-sm-offset-1">
-        <a href="estadisticas.php">
-          <div style="border: 1px solid #E6E6E9; background-color: #e3e3e3; border-radius: 4px; padding: 15px; text-align: center ">
-            <span style="top: 0px;" class="glyphicon glyphicon-signal"></span>
+
+
+      <div class="col-sm-4 col-sm-offset-1">
+        <a href="php/reportes/reporte_posgrados.php">
+          <div style="border: 1px solid #D4E0EF; background-color: #e3e3e3; border-radius: 4px; padding: 15px; text-align: center  ">
+            <span style="top: 0px;" class="glyphicon glyphicon-user"></span>
             <br />
-            ESTADISTICAS
+            ESTUDIANTES
           </div>
         </a>
       </div>
@@ -155,7 +158,7 @@
         <th>N.</th>
         <th>Nombre</th>
         <th style="text-align: center">Cantidad Programas</th>
-        <th style="text-align: center">Cantidad Matricula Activa</th>
+        <th style="text-align: center">Cantidad Matricula</th>
       </thead>
       <?php $elementos = consultar_postgrados();
             $num = 0;
@@ -180,17 +183,22 @@
      <table class="table table-bordered table-hover" style="display: none" id="table_programas">
       <thead>
         <tr>
-          <th rowspan="2">N.</th>
-          <th rowspan="2">Nombre</th>
-          <th colspan="6" style="text-align: center">Matricula</th>
+          <th rowspan="3">N.</th>
+          <th rowspan="3">Nombre</th>
+          <th colspan="5" style="text-align: center">Matricula</th>
+        </tr>
+        <tr>
+          <th colspan="3" style="text-align: center">Cantidad de Expedientes</th>
+          <th rowspan="2" style="vertical-align: middle;text-align: center;">Retirados</th>
+          <th rowspan="2" style="vertical-align: middle;text-align: center;">Egresados</th>
         </tr>
         <tr>
           <th>Activos</th>
-          <th>Egresados</th>
-          <th>Retirados</th>
-          <th>Desincorporados</th>
           <th>Inactivos</th>
-          <th>Extension de Plazo</th>
+          <th>Pasivos</th>
+          
+          <!--th>Desincorporados</th-->
+          <!--th>Extension de Plazo</th-->
         </tr>
       </thead>
       <?php $elementos = consultar_programas();
@@ -204,11 +212,13 @@
             <td><?php echo $num; ?></td>
             <td><?php echo strtoupper($elemento->nombre); ?></td>
             <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',1); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",1)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
-            <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',2); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",2)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
-            <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',5); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",5)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
-            <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',6); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",6)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
             <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',3); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",3)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
-            <td style="text-align: center"><?php $cantidad = get_prorrogas($elemento->id,'cantidad'); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",999)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
+            <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',106); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",106)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
+            <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',5); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",5)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
+            <td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',2); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",2)'>".$cantidad."</a>"; else echo $cantidad; ?></td>
+            <!--td style="text-align: center"><?php $cantidad = get_cantidad_matricula($elemento->id,'programas',6); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",6)'>".$cantidad."</a>"; else echo $cantidad; ?></td-->
+           
+            <!--td style="text-align: center"><?php $cantidad = get_prorrogas($elemento->id,'cantidad'); if($cantidad > 0) echo "<a style='cursor: pointer' onclick='javascript:ver_matricula(".$elemento->id.",999)'>".$cantidad."</a>"; else echo $cantidad; ?></td-->
           </tr>
         <?php
         }

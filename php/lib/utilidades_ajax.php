@@ -30,7 +30,11 @@
 			foreach ($elementos as $valor) {
 				$elemento = array();
 	        	$elemento['id'] = $valor->id;
+<<<<<<< HEAD
 	        	$elemento['nombre'] = utf8_encode($valor->nombre);
+=======
+	        	$elemento['nombre'] = $valor->nombre;
+>>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 	        	$resultado[] = $elemento;
 	        } 
 
@@ -56,6 +60,22 @@
 		$data['resultado'] = $resultado;
 	}
 
+<<<<<<< HEAD
+=======
+	if($accion == '3')
+	{
+		$data['success'] = true;
+		$resultado = array();
+		
+		$elementos = consultar_programa_x_id($_GET['valor']);
+		$name_program = trim(preg_replace('/\s*\(.*$/', '', $elementos->nombre));
+
+		$data['resultado'] = $elementos;
+		$data['name'] = $name_program;
+	}
+
+
+>>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 	echo json_encode($data);
 
 ?>

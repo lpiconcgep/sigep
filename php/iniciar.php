@@ -34,7 +34,9 @@ if(!empty($_POST))
 					unset($_SESSION['user']);
 					unset($_SESSION['name']);
 					unset($_SESSION['user_id']);
+
 					print "<script>alert('Contraseña incorrectas.');window.location='../login.php';</script>";
+
 				}
 			}
 			else

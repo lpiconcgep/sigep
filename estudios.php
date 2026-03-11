@@ -39,7 +39,18 @@ $cedula = $person->nacionalidad." - ".$person->documento_identidad;
   
 </div>  
 <div class="col-sm-1 col-sm-offset-10">
-  <a href="personas.php" class="btn btn-danger">Ir atr&aacute;s</a>
+
+<?php $back = $_GET['sour']; 
+    if($back == 'list')
+    {
+      $url_back = "/sigep_prototipo/personas.php";
+    }
+    else{
+      $url_back = "/sigep_prototipo/buscar.php?s=".$_GET['s'];
+    }
+  ?>
+  <a href="<?=$url_back?>" class="btn btn-danger">Ir atr&aacute;s</a>
+
 </div>
 
   

@@ -1,47 +1,72 @@
 <?php 
 session_start();
-  if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') { ?>
+ini_set('display_errors',0);
+if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') { ?>
 <html>
-	<head>
-		<title>.: SIGEP :.</title>
-		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-		<script src="js/jquery.min.js"></script>
-	</head>
-	<body>
-	<?php include "php/navbar.php"; ?>
+<head>
+    <title>.: SIGEP :.</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <style>
+        .btn-verde {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: #fff;
+        }
+        .btn-verde:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<?php 
+    include "php/navbar.php"; 
+    include "php/funciones.php";
+?>
 <div class="container">
 <div class="row">
 <div class="col-md-12">
-		<h3>VER POSTGRADOS</h3>
-<!-- Button trigger modal -->
-  <!--a data-toggle="modal" href="#myModal" class="btn btn-default">Agregar</a-->
-<br><br>
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Agregar</h4>
-        </div>
-        <div class="modal-body">
-            <?php include "php/personas/form.php";?>
-        </div>
+    <h3>VER POSTGRADOS</h3>
+    <br>
+    <?php $facultades_obj = consultar_facultades(); 
+    $facultades = (array) $facultades_obj;
+    ?>
+    <!-- ============================
+         FILTRO DE FACULTADES :)
+         ============================ -->
+    <form method="get" class="form-inline mb-3">
+        <label for="facultadSelect" class="mr-2"><strong>Filtrar por Facultad:</strong></label>
+        <select id="facultadSelect" name="facultad" class="form-control mr-2" style="max-width:250px;">
+            <option value="">Todos</option>
+            <?php 
+                foreach ($facultades as $fact) {
+                    $fac = (array) $fact;
+                    ?>
+                    <option value="<?php echo $fac['id']; ?>" 
+                        <?php if(isset($_GET['facultad']) && $_GET['facultad']==$fac['id']) echo "selected"; ?>>
+                        <?php echo htmlspecialchars($fac['nombre']); ?>
+                    </option>
 
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+                    <?php
+                }
+                ?>
+        </select>
+        <button type="submit" class="btn btn-verde">Filtrar</button>
+    </form>
 
 
-<?php include "php/postgrados/listar.php"; ?>
+    <?php  include "php/postgrados/listar.php"; ?>
+
 </div>
 </div>
 </div>
 
 <script src="bootstrap/js/bootstrap.min.js"></script>
-	</body>
+
+</body>
 </html>
-<?php } 
-  else 
+<?php } else {
     print "<script>alert('Debe iniciar sesion.'); window.location='index.php';</script>";
-?>
+} ?>

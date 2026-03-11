@@ -27,7 +27,7 @@ $query = $con->query($sql1);
 	<td><?php echo $r["sexo"]; ?></td>
 	
 	<td style="width:150px;">
-		<a href="./php/personas/editar.php?id=<?php echo $r["id"];?>" class="btn btn-sm btn-warning">Editar</a>
+		<a href="./php/personas/editar.php?sour=list&id=<?php echo $r["id"];?>" class="btn btn-sm btn-warning">Editar</a>
 		<!-- a href="#" id="del-<?php echo $r["id"];?>" class="btn btn-sm btn-danger">Eliminar</a>
 		<script>
 		$("#del-"+<?php echo $r["id"];?>).click(function(e){
@@ -40,7 +40,8 @@ $query = $con->query($sql1);
 
 		});
 		</script-->
-		<a href="estudios.php?id=<?php echo $r["id"];?>" class="btn btn-sm btn-primary">Estudios</a>
+
+		<a href="estudios.php?sour=list&id=<?php echo $r["id"];?>" class="btn btn-sm btn-primary">Estudios</a>
 
 	</td>
 </tr>

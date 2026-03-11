@@ -1,7 +1,7 @@
 
 <html>
 	<head>
-		<title>.: CRUD :.</title>
+		<title>.: SIGEP :.</title>
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 		<script src="js/jquery.min.js"></script>
 	</head>
@@ -10,7 +10,9 @@
 <div class="container">
 <div class="row">
 <div class="col-md-12">
-		<h2>BUSCAR</h2>
+
+		<h3>Buscar todo lo que coincida con <strong >*<?php echo $_GET['s']?>*</strong></h3>
+
 
 
 <?php include "php/personas/busqueda.php"; ?>
