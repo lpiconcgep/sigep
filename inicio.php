@@ -11,7 +11,7 @@ session_start();
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-						<h2>..:: SIGEP - Sistema Integrado de Gesti&oacute;n de Postgrados ::..</h2>
+						<h2>..:: SIGEPPPP - Sistema Integrado de Gesti&oacute;n de Postgrados ::..</h2>
 						<p class="lead">Modulo para ver, agregar, actualizar datos <br /> de los Estudiantes de Postgrado</p>
 						<p>Instrucciones para agregar estudiantes:</p>
 						<ol>
