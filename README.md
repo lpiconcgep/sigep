@@ -31,6 +31,4 @@ SIGEP es una aplicación web desarrollada en \*\*PHP\*\* para administrar los da
 1\.  Clona el repositorio:
 
 &#x20;   ```bash
-
 &#x20;   git clone \[https://github.com/lpiconcgep/sigep.git](https://github.com/lpiconcgep/sigep.git)
-

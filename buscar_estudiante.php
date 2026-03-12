@@ -5,11 +5,8 @@ include "./php/conexion.php";
 include "./php/funciones.php";
 include "./php/utilidades.php";
 
-<<<<<<< HEAD
 if (isset($_POST['opcion']) && $_POST['opcion'] != '')
-=======
-if(isset($_POST['opcion']) && $_POST['opcion'] != '')
->>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
+
 {
 	$opcio = $_POST['opcion'];
 }
@@ -22,14 +19,12 @@ else
 	$opcio = '';
 }
 
-<<<<<<< HEAD
-=======
+
 if(isset($_GET) && isset($_GET['opt']) == '' && $opcio == '')
 {
 	$opcio = 1;
 }
 
->>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 if(isset($opcio) && $opcio != '')
 {
 	$opcion = " REGISTRO DE INFORMACION PARA ";
@@ -37,24 +32,16 @@ if(isset($opcio) && $opcio != '')
 		$opcion .= "NUEVO INGRESO";
 	else if($opcio == '2')
 		$opcion .= "RETIRO O DESINCORPORACION";
-<<<<<<< HEAD
-=======
 	else if($opcio == '4') 
 		$opcion .= "CIERRE DE EXPEDIENTE";
->>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 	else 
 		$opcion .= "EGRESO DE ESTUDIANTE";
 }
 
 if(isset($_POST['s'])) { $s = $_POST['s']; } else { $s = $_GET['s']; }
 
-<<<<<<< HEAD
-$persona = buscar_persona_x_cedula($s);
-=======
-
 $persona = buscar_persona_x_cedula($s);
 
->>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 if($persona != NULL)
 {
 	$estudios_persona = buscar_inscripciones_x_persona_id($persona->id);
