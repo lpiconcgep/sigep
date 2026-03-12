@@ -58,7 +58,7 @@ session_start();
 		        </a>
 		      </div>
 		      <div class="col-sm-3 col-sm-offset-1" id="btn-egreso">
-		        <a onclick="javacript:mostrar_egreso()" style="cursor: pointer">
+		        <a onclick="javacript:mostrar_egreso('prod')" style="cursor: pointer">
 
 		          <div style="border: 1px solid #E6E6E9; background-color: #e3e3e3; border-radius: 4px; padding: 15px; text-align: center ">
 		            <span style="top: 0px;" class="glyphicon glyphicon-user"></span>
