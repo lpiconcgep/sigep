@@ -6,7 +6,6 @@ include "./php/funciones.php";
 include "./php/utilidades.php";
 
 if (isset($_POST['opcion']) && $_POST['opcion'] != '')
-
 {
 	$opcio = $_POST['opcion'];
 }
@@ -92,7 +91,6 @@ if($persona != NULL)
 							<?php } ?>
 
 						</div>
-
 						<?php if($persona != NULL) { 
 							$cols = $opcio != '4' ? "col-sm-5" : "col-sm-6";
 							?>
@@ -102,7 +100,6 @@ if($persona != NULL)
 										<h4>Datos Personales: </h4>
 										<p><strong>Nombres: </strong><?php echo strtoupper($persona->primer_nombre." ".$persona->segundo_nombre); ?></p>
 										<p><strong>Apellidos: </strong><?php echo strtoupper($persona->primer_apellido." ".$persona->segundo_apellido); ?></p>
-
 									</div>
 								</div>
 								<br>
@@ -122,7 +119,6 @@ if($persona != NULL)
 								<?php
 								$source = 'integral';
 								$opcio = $opcio;
-
 								$documento_identidad = $persona->documento_identidad;
 								include "php/estudiante/form_new_estudiante.php"; ?>
 							</div>

@@ -31,6 +31,7 @@
 				$elemento = array();
 	        	$elemento['id'] = $valor->id;
 	        	$elemento['nombre'] = utf8_encode($valor->nombre);
+
 	        	$resultado[] = $elemento;
 	        } 
 

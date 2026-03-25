@@ -1,5 +1,4 @@
 <?php
-
 include "./php/conexion.php";
 //include "./php/funciones.php";
 

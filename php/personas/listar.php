@@ -40,7 +40,6 @@ $query = $con->query($sql1);
 
 		});
 		</script-->
-
 		<a href="estudios.php?sour=list&id=<?php echo $r["id"];?>" class="btn btn-sm btn-primary">Estudios</a>
 
 	</td>

@@ -4,8 +4,6 @@ include "php/conexion.php";
 include "php/funciones.php";
 include "php/utilidades.php";
 
-
-
 $user_id=null;
 $sql1= "select ep.*,ep.id estudiante_id,p.id persona_id,pr.nombre programa,e.nombre estatus,c.nombre condicion, pr.id as programa_id 
 		from estudiante_programa ep INNER JOIN persona p ON ep.persona_id = p.id

@@ -56,7 +56,6 @@ if(!empty($_POST))
 }
 else
 {
-
 	echo "if post vacio";
 }
 

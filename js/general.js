@@ -104,8 +104,6 @@ function mostrar_registro_cierre(data, programa_id)
 }
 
 
-
-
 /*$("#table_facultades").css("display" , "");
 $("#table_postgrados").css("display" , "none");
 $("#table_programas").css("display" , "none");*/

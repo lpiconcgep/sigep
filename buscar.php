@@ -13,8 +13,6 @@
 
 		<h3>Buscar todo lo que coincida con <strong >*<?php echo $_GET['s']?>*</strong></h3>
 
-
-
 <?php include "php/personas/busqueda.php"; ?>
 </div>
 </div>

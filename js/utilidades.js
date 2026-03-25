@@ -17,6 +17,7 @@ $('#generar_pdf').click(function(e) {
     }).appendTo('body').submit();
 });
 
+
 function buscar_postgrados(){
 
 	facultad_id = $("#select_facultades option:selected").val();
@@ -208,7 +209,6 @@ function ver_matricula(programa_id,tipo)
 {
     
     location.href = '../../matricula.php?programa_id='+programa_id+'&tipo='+tipo+'&source=reportes';
-      
 }
 
 //VALIDACIÓN

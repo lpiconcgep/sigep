@@ -139,7 +139,6 @@
 	
 		if($facultad_id == '-1')
 		{
-
 			$sql = "select id,nombre,facultad_nucleo_id from postgrado order by facultad_nucleo_id,nombre ASC";
 		}
 		else
@@ -304,22 +303,23 @@
 								$programas = '';
 								while ($r1=$query_p->fetch_object())
 								{
-								  $programas=$r1;
-								  $id = $programas->id;
 
-									$sql_e = "SELECT count(*) as cantidad FROM estudiante_programa where condicion_estudiante_id = ".$condicion." AND programa_id = ".$id;
-									$query_e = $con->query($sql_e);
-									if($query_e->num_rows>0)
+								$programas=$r1;
+								$id = $programas->id;
+
+								$sql_e = "SELECT count(*) as cantidad FROM estudiante_programa where condicion_estudiante_id = ".$condicion." AND programa_id = ".$id;
+								$query_e = $con->query($sql_e);
+								if($query_e->num_rows>0)
+								{
+									$matricula = '';
+									while ($r2=$query_e->fetch_object())
 									{
-										$matricula = '';
-										while ($r2=$query_e->fetch_object())
-										{
-										  $matricula=$r2;
-										  break;
-										}
-										
-										$cantidad += $matricula->cantidad;
+									  $matricula=$r2;
+									  break;
 									}
+									
+									$cantidad += $matricula->cantidad;
+								}
 
 								}
 							}
@@ -362,7 +362,6 @@
 		}
 		elseif($opcion == 'programas')
 		{
-
 			if($condicion >= 100)
 			{
 				$condicion = $condicion - 100;
@@ -448,8 +447,6 @@
 	function buscar_persona_x_cedula($cedula)
 	{
 		include "conexion.php";
-
-
 		$sql1= "select * from persona where documento_identidad = '".$cedula."'";
 		$query = $con->query($sql1);
 		$person = null;
@@ -597,107 +594,107 @@
 	{
 		include "conexion.php";
 		  $tcpdf_path = __DIR__ . '/../libs/TCPDF/tcpdf.php';
-    if (!file_exists($tcpdf_path)) {
-        die("Error: no se encontró TCPDF en la ruta esperada: $tcpdf_path");
-    }
-    require_once $tcpdf_path;
+	    if (!file_exists($tcpdf_path)) {
+	        die("Error: no se encontró TCPDF en la ruta esperada: $tcpdf_path");
+	    }
+	    require_once $tcpdf_path;
 
-    if (ob_get_length()) {
-        ob_end_clean();
-    }
+	    if (ob_get_length()) {
+	        ob_end_clean();
+	    }
 
-	/*$sql = "SELECT 
-            p.documento_identidad,
-            CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
-            CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
-            pr.nombre AS programa,
-            e.fecha_ingreso, e.created_at as fecha_registro, p.fecha_nacimiento as fecha_nacimiento
-        FROM estudiante_programa e
-        INNER JOIN persona p ON p.id = e.persona_id
-        INNER JOIN programa pr ON pr.id = e.programa_id
-        WHERE 1=1";
+		/*$sql = "SELECT 
+	            p.documento_identidad,
+	            CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
+	            CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
+	            pr.nombre AS programa,
+	            e.fecha_ingreso, e.created_at as fecha_registro, p.fecha_nacimiento as fecha_nacimiento
+	        FROM estudiante_programa e
+	        INNER JOIN persona p ON p.id = e.persona_id
+	        INNER JOIN programa pr ON pr.id = e.programa_id
+	        WHERE 1=1";
 
-		$params = [];
-		$types = "";
+			$params = [];
+			$types = "";
 
-		if ($anio !== null) {
-		    $sql .= " AND YEAR(e.fecha_ingreso) = ?";
-		    $params[] = $anio;
-		    $types .= "i";
-		}
-		if ($programa !== null) {
-		    $sql .= " AND e.programa_id = ?";
-		    $params[] = $programa;
-		    $types .= "i";
-		}
+			if ($anio !== null) {
+			    $sql .= " AND YEAR(e.fecha_ingreso) = ?";
+			    $params[] = $anio;
+			    $types .= "i";
+			}
+			if ($programa !== null) {
+			    $sql .= " AND e.programa_id = ?";
+			    $params[] = $programa;
+			    $types .= "i";
+			}
 
-		$sql .= " ORDER BY e.fecha_ingreso ASC, p.primer_apellido ASC, p.primer_nombre ASC";
+			$sql .= " ORDER BY e.fecha_ingreso ASC, p.primer_apellido ASC, p.primer_nombre ASC";
 
-		$stmt = mysqli_prepare($con, $sql);
-		if (!empty($params)) {
-		    mysqli_stmt_bind_param($stmt, $types, ...$params);
-		}
-		mysqli_stmt_execute($stmt);
-		$result = mysqli_stmt_get_result($stmt);
+			$stmt = mysqli_prepare($con, $sql);
+			if (!empty($params)) {
+			    mysqli_stmt_bind_param($stmt, $types, ...$params);
+			}
+			mysqli_stmt_execute($stmt);
+			$result = mysqli_stmt_get_result($stmt);
 
-		// Guardar filas en array
-		$rows = [];
-		if ($result) {
-		    while ($r = mysqli_fetch_assoc($result)) {
-		        $rows[] = $r;
-		    }
-		}*/
+			// Guardar filas en array
+			$rows = [];
+			if ($result) {
+			    while ($r = mysqli_fetch_assoc($result)) {
+			        $rows[] = $r;
+			    }
+			}*/
 
 		include "query_filtro.php";
 
 
 
 
-    $pdf = new TCPDF();
-    $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('SIGEP');
-    $pdf->SetTitle('Reporte de Estudiantes de Postgrado');
-    $pdf->SetMargins(15, 20, 15);
-    $pdf->AddPage();
+	    $pdf = new TCPDF();
+	    $pdf->SetCreator(PDF_CREATOR);
+	    $pdf->SetAuthor('SIGEP');
+	    $pdf->SetTitle('Reporte de Estudiantes de Postgrado');
+	    $pdf->SetMargins(15, 20, 15);
+	    $pdf->AddPage();
 
-    $pdf->SetFont('helvetica', 'B', 14);
-    $pdf->Cell(0, 10, "Reporte de Estudiantes de Postgrado", 0, 1, 'C');
-    $pdf->Ln(5);
-    $pdf->SetFont('helvetica', '', 10);
+	    $pdf->SetFont('helvetica', 'B', 14);
+	    $pdf->Cell(0, 10, "Reporte de Estudiantes de Postgrado", 0, 1, 'C');
+	    $pdf->Ln(5);
+	    $pdf->SetFont('helvetica', '', 10);
 
-    $html = '<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse; width:100%;">';
-    $html .= '<thead><tr style="background-color:#d3d3d3; color:#000;">';
-    $html .= '<th align="center"><b>Documento</b></th>';
-    $html .= '<th align="center"><b>Apellidos</b></th>';
-    $html .= '<th align="center"><b>Nombres</b></th>';
-    $html .= '<th align="center"><b>Programa</b></th>';
-    $html .= '<th align="center">Fecha de Nacimiento</th>';
-    $html .= '<th align="center"><b>Fecha de Ingreso</b></th>';
-    $html .= '<th align="center"><b>Fecha de Registro</b></th>';
-    $html .= '</tr></thead><tbody>';
+	    $html = '<table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse; width:100%;">';
+	    $html .= '<thead><tr style="background-color:#d3d3d3; color:#000;">';
+	    $html .= '<th align="center"><b>Documento</b></th>';
+	    $html .= '<th align="center"><b>Apellidos</b></th>';
+	    $html .= '<th align="center"><b>Nombres</b></th>';
+	    $html .= '<th align="center"><b>Programa</b></th>';
+	    $html .= '<th align="center">Fecha de Nacimiento</th>';
+	    $html .= '<th align="center"><b>Fecha de Ingreso</b></th>';
+	    $html .= '<th align="center"><b>Fecha de Registro</b></th>';
+	    $html .= '</tr></thead><tbody>';
 
-    if (count($rows) > 0) {
-        foreach ($rows as $row) {
-            $html .= '<tr>';
-            $html .= '<td align="center">' . htmlspecialchars($row['documento_identidad']) . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['apellidos']) . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['nombres']) . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['programa']) . '</td>';
-            $html .= '<td align="center">' . transforma_fecha($row['fecha_nacimiento']) . '</td>';
-            $html .= '<td align="center">' . transforma_fecha($row['fecha_ingreso']) . '</td>';
-            $html .= '<td align="center">' . transforma_fecha($row['fecha_registro']) . '</td>';
-            $html .= '</tr>';
-        }
-    } else {
-        $html .= '<tr><td colspan="5" align="center">No se encontraron estudiantes.</td></tr>';
-    }
+	    if (count($rows) > 0) {
+	        foreach ($rows as $row) {
+	            $html .= '<tr>';
+	            $html .= '<td align="center">' . htmlspecialchars($row['documento_identidad']) . '</td>';
+	            $html .= '<td>' . htmlspecialchars($row['apellidos']) . '</td>';
+	            $html .= '<td>' . htmlspecialchars($row['nombres']) . '</td>';
+	            $html .= '<td>' . htmlspecialchars($row['programa']) . '</td>';
+	            $html .= '<td align="center">' . transforma_fecha($row['fecha_nacimiento']) . '</td>';
+	            $html .= '<td align="center">' . transforma_fecha($row['fecha_ingreso']) . '</td>';
+	            $html .= '<td align="center">' . transforma_fecha($row['fecha_registro']) . '</td>';
+	            $html .= '</tr>';
+	        }
+	    } else {
+	        $html .= '<tr><td colspan="5" align="center">No se encontraron estudiantes.</td></tr>';
+	    }
 
-    $html .= '</tbody></table>';
-    $html .= '<br/><div style="font-size:10px;color:#666;">Generado el: ' . date('d/m/Y') . '</div>';
+	    $html .= '</tbody></table>';
+	    $html .= '<br/><div style="font-size:10px;color:#666;">Generado el: ' . date('d/m/Y') . '</div>';
 
-    $pdf->writeHTML($html, true, false, true, false, '');
-    $filename = "reporte_postgrados.pdf";
-    $pdf->Output($filename, 'I');
-    exit;
+	    $pdf->writeHTML($html, true, false, true, false, '');
+	    $filename = "reporte_postgrados.pdf";
+	    $pdf->Output($filename, 'I');
+	    exit;
 	}
 ?>

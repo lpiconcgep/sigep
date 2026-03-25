@@ -29,7 +29,6 @@ $query = $con->query($sql1);
 
 		<!--a href="#" id="del-<?php echo $r["id"];?>" class="btn btn-sm btn-danger">Eliminar</a-->
 		<!--script>
->>>>>>> 24861cc2950c10fe5a8d8e9a1af9bbdbeff45c07
 		$("#del-"+<?php echo $r["id"];?>).click(function(e){
 			e.preventDefault();
 			p = confirm("Estas seguro?");
