@@ -16,6 +16,8 @@ include "../conexion.php";
 // 2) Filtros seleccionados
 $anio = isset($_GET['anio']) && $_GET['anio'] !== '' && is_numeric($_GET['anio']) ? intval($_GET['anio']) : null;
 $programa = isset($_GET['programa']) && $_GET['programa'] !== '' && is_numeric($_GET['programa']) ? intval($_GET['programa']) : null;
+$facultad = isset($_GET['facultad']) && $_GET['facultad'] !== '' && is_numeric($_GET['facultad']) ? intval($_GET['facultad']) : null;
+$estatus = isset($_GET['estatus']) && $_GET['estatus'] !== '' && is_numeric($_GET['estatus']) ? intval($_GET['estatus']) : null;
 
 $resAnios = filtro_anio($anio,$programa);
 $anios = [];
@@ -29,6 +31,11 @@ $programas = [];
 while ($p = mysqli_fetch_assoc($resProgramas)) {
     $programas[] = $p;
 }
+
+
+$facultades_obj = consultar_facultades(); 
+$facultades = (array) $facultades_obj;
+
 
 // 4) Consulta principal dinamica
 include "../query_filtro.php";
@@ -117,19 +124,31 @@ if (file_exists($navbar_path)) {
 </div>
 <div class="card-body">
 <form method="get" class="form-inline">
-    <div class="form-group">
-        <label for="anioSelect"><strong>Año</strong></label>
-            <select id="anioSelect" name="anio" class="form-control" style="width:200px; margin-left:10px; margin-right:20px;">
+    <div class="row">
+        <div class="col-md-12">
+        
+    
+    <div class="form-group col-md-4">
+        <label for="facultadSelect"><strong>Facultad:</strong></label>
+        <select id="facultadSelect" name="facultad" class="form-control mr-2" style="max-width:200px;">
             <option value="">Todos</option>
-                <?php foreach ($anios as $a): ?>
-                <option value="<?php echo $a; ?>" <?php if ($anio !== null && $a == $anio) echo "selected"; ?>><?php echo $a; ?></option>
-                 <?php endforeach; ?>
-             </select>
-    </div>
+            <?php 
+                foreach ($facultades as $fact) {
+                    $fac = (array) $fact;
+                    ?>
+                    <option value="<?php echo $fac['id']; ?>" 
+                        <?php if ($facultad !== null && $facultad == $fac['id']) echo "selected"; ?>>
+                        <?php echo htmlspecialchars($fac['nombre']); ?>
+                    </option>
 
-    <div class="form-group">
+                    <?php
+                }
+                ?>
+        </select>
+    </div>
+    <div class="form-group col-md-3">
         <label for="programaSelect"><strong>Postgrado</strong></label>
-        <select id="programaSelect" name="programa" class="form-control" style="width:250px; margin-left:10px; margin-right:20px;">
+        <select id="programaSelect" name="programa" class="form-control mr-2" style="width:180px;">
             <option value="">Todos</option>
             <?php foreach ($programas as $pr): ?>
                 <option value="<?php echo $pr['id']; ?>" <?php if ($programa !== null && $programa == $pr['id']) echo "selected"; ?>>
@@ -137,6 +156,34 @@ if (file_exists($navbar_path)) {
             <?php endforeach; ?>
         </select>
     </div>
+    <div class="form-group col-md-2">
+        <label for="anioSelect"><strong>Año</strong></label>
+            <select id="anioSelect" name="anio" class="form-control" style="width:100px;">
+            <option value="">Todos</option>
+                <?php foreach ($anios as $a): ?>
+                <option value="<?php echo $a; ?>" <?php if ($anio !== null && $a == $anio) echo "selected"; ?>><?php echo $a; ?></option>
+                 <?php endforeach; ?>
+             </select>
+    </div>
+     <div class="form-group col-md-2">
+        <label for="anioSelect"><strong>Estatus</strong></label>
+            <select id="estatusSelect" name="estatus" class="form-control" style="width:100px;">
+                <option value="">Todos</option>
+                   <?php 
+                $estatusOpciones = [
+                    1 => 'Activos',
+                    2 => 'Egresados',
+                    3 => 'Inactivos',
+                    5 => 'Retirados'
+                ];
+                foreach ($estatusOpciones as $valor => $texto): 
+                ?>
+                <option value="<?php echo $valor; ?>" <?php if (isset($estatusBusqueda) && $estatusBusqueda == $valor) echo "selected"; ?>><?php echo $texto; ?></option>
+                <?php endforeach; ?>
+            </select>
+    </div>
+
+
 
     <button type="submit" class="btn btn-filtrar">Filtrar</button>
 
@@ -145,10 +192,11 @@ if (file_exists($navbar_path)) {
         $qs = [];
         if ($anio !== null) $qs['anio'] = $anio;
         if ($programa !== null) $qs['programa'] = $programa;
+        if ($facultad !== null) $qs['facultad'] = $facultad;
         $qs['pdf'] = '1';
         echo http_build_query($qs);
     ?>" class="btn btn-verde" style="margin-left:10px;" target="_blank">📄 Descargar PDF</a>
-
+</div></div>
 </form>
 
 <div class="table-responsive">
@@ -159,6 +207,7 @@ if (file_exists($navbar_path)) {
 <th class="text-center">Apellidos</th>
 <th class="text-center">Nombres</th>
 <th class="text-center">Programa</th>
+<th class="text-center">Estatus</th>
 <th class="text-center">Fecha de Nacimiento</th>
 <th class="text-center">Fecha de Ingreso</th>
 <th class="text-center">Fecha de Registro</th>
@@ -172,6 +221,7 @@ if (file_exists($navbar_path)) {
             <td><?php echo htmlspecialchars($row['apellidos']); ?></td>
             <td><?php echo htmlspecialchars($row['nombres']); ?></td>
             <td><?php echo htmlspecialchars($row['programa']); ?></td>
+            <td><?php echo htmlspecialchars($row['condicion_estudiante']); ?></td>
             <td class="text-center"><?php echo transforma_fecha($row['fecha_nacimiento']); ?></td>
             <td class="text-center"><?php echo transforma_fecha($row['fecha_ingreso']); ?></td>
             <td class="text-center"><?php echo transforma_fecha($row['fecha_registro']); ?></td>

@@ -5,10 +5,14 @@ $sql = "SELECT
             CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
             CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
             pr.nombre AS programa,
-            e.fecha_ingreso, e.created_at as fecha_registro, p.fecha_nacimiento as fecha_nacimiento
+            e.fecha_ingreso, e.created_at as fecha_registro, p.fecha_nacimiento as fecha_nacimiento,
+            ce.nombre as condicion_estudiante, f.nombre as facultad
         FROM estudiante_programa e
         INNER JOIN persona p ON p.id = e.persona_id
         INNER JOIN programa pr ON pr.id = e.programa_id
+        INNER JOIN postgrado post ON pr.postgrado_id = post.id
+        INNER JOIN facultad_nucleo f ON post.facultad_nucleo_id = f.id
+        INNER JOIN condicion_estudiante ce ON e.condicion_estudiante_id = ce.id
         WHERE 1=1";
 
 $params = [];
@@ -24,6 +28,32 @@ if ($programa !== null) {
     $params[] = $programa;
     $types .= "i";
 }
+if ($facultad !== null) {
+    $sql .= " AND f.id = ?";
+    $params[] = $facultad;
+    $types .= "i";
+
+}
+if ($estatus !== null) {
+    
+    if ($estatus == 3 || $estatus == 5){
+      $sql .= " AND ce.id IN (?,?)";
+      if ($estatus == 3) {
+            $params = [3, 4];
+        }
+        if ($estatus == 5){
+            $params = [5, 6];
+        }
+        $types .= "ii";
+    }
+    else {
+        $sql .= " AND ce.id = ?";
+        $params[] = $estatus;
+        $types .= "i";
+    }
+      
+}
+
 
 $sql .= " ORDER BY e.fecha_ingreso ASC, p.primer_apellido ASC, p.primer_nombre ASC";
 

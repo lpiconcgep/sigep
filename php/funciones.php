@@ -671,6 +671,7 @@
     $html .= '<th align="center"><b>Apellidos</b></th>';
     $html .= '<th align="center"><b>Nombres</b></th>';
     $html .= '<th align="center"><b>Programa</b></th>';
+    $html .= '<th align="center"><b>Estatus</b></th>';
     $html .= '<th align="center">Fecha de Nacimiento</th>';
     $html .= '<th align="center"><b>Fecha de Ingreso</b></th>';
     $html .= '<th align="center"><b>Fecha de Registro</b></th>';
@@ -683,6 +684,7 @@
             $html .= '<td>' . htmlspecialchars($row['apellidos']) . '</td>';
             $html .= '<td>' . htmlspecialchars($row['nombres']) . '</td>';
             $html .= '<td>' . htmlspecialchars($row['programa']) . '</td>';
+            $html .= '<td>' . htmlspecialchars($row['condicion_estudiante']) . '</td>';
             $html .= '<td align="center">' . transforma_fecha($row['fecha_nacimiento']) . '</td>';
             $html .= '<td align="center">' . transforma_fecha($row['fecha_ingreso']) . '</td>';
             $html .= '<td align="center">' . transforma_fecha($row['fecha_registro']) . '</td>';
