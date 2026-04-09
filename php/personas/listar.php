@@ -10,15 +10,23 @@ $query = $con->query($sql1);
 ?>
 
 <?php if($query->num_rows>0):?>
-<table class="table table-bordered table-hover">
+
+
+
+
+<table id="table_personas" class="table_datatables table table-bordered table-hover">
 <thead>
-	<th>Ced. Identidad</th>
-	<th>Apellidos</th>
-	<th>Nombres</th>
-	<th>Sexo</th>
-	
-	<th></th>
+	<tr>
+		<th>Ced. Identidad</th>
+		<th>Apellidos</th>
+		<th>Nombres</th>
+		<th>Sexo</th>
+		
+		<th></th>
+	</tr>
 </thead>
+<tbody>
+	
 <?php while ($r=$query->fetch_array()):?>
 <tr>
 	<td><?php echo $r["nacionalidad"]." - ".$r["documento_identidad"]; ?></td>
@@ -46,6 +54,7 @@ $query = $con->query($sql1);
 	</td>
 </tr>
 <?php endwhile;?>
+</tbody>
 </table>
 <?php else:?>
 	<p class="alert alert-warning">No hay resultados</p>

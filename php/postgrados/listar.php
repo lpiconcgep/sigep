@@ -12,15 +12,18 @@ else
     $lista_postg_facultad = consultar_postgrados();
 
 if(count($lista_postg_facultad)>0): ?>
-<table class="table table-bordered table-hover">
+<table id="table_postgrado" class="table_datatables table table-bordered table-hover">
     <thead>
+        <tr>
         <th>N.</th>
         <th>Facultad</th>
         <th>Nombre</th>
         <th>Cantidad Programas</th>
         <th></th>
+        </tr>
     </thead>
-
+<tbody>
+    
 
 <?php 
 $num = 0;
@@ -41,6 +44,7 @@ foreach ($lista_postg_facultad as $postgrado) {
         </td>
     </tr>
     <?php }?>
+    </tbody>
 </table>
 <?php else:?>
     <p class="alert alert-warning">No hay resultados</p>
