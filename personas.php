@@ -4,11 +4,10 @@ session_start();
 <html>
 	<head>
 		<title>.: SIGEP :.</title>
-        <link rel="stylesheet" type="text/css" href="css/styles_tables.css">
-		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-		<script src="js/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <<link rel="stylesheet" type="text/css" href="css/styles_tables.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/DataTables/datatables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 	</head>
 	<body>
