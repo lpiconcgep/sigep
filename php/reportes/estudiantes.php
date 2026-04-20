@@ -52,9 +52,9 @@ $facultades = (array) $facultades_obj;
 // 4) Consulta principal dinamica
 include "../query_filtro.php";
 
-// 5) PDF con TCPDF
+// 5) PDF con TCPDF (CORREGIDO - se pasan todos los filtros)
 if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
-   crear_pdf($anio,$programa);
+   crear_pdf($anio, $programa, $facultad, $estatus);
 }
 ?>
 

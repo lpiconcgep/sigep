@@ -13,8 +13,8 @@
             
             <div class="presentacion-section">
                 <div class="logo-section">
-<!--                     <i class="fas fa-graduation-cap"></i>
- -->                </div>
+                    <!-- Logo mantenido según original -->
+                </div>
                 
                 <div class="description">
                     <p><strong>SIGEP</strong> es una plataforma tecnológica desarrollada para optimizar y modernizar la administración académica de programas de postgrado. Nuestro sistema ofrece herramientas eficientes para la gestión integral de estudiantes.</p>
@@ -46,12 +46,13 @@
             </div>
             
             <div class="manual-footer">
-                    <hr>
-                    <div class="support-info">
-                        <i class="fas fa-headset"></i>
-                        <h4>!Bienvenido a la actualizacion 2.0 🛠️</h4>
-                        <p>SIGEP 2.0</p>
-                    </div>
+                <hr>
+                <div class="support-info">
+                    <i class="fas fa-headset"></i>
+                    <h4>¡Bienvenido a la actualización 2.0! 🛠️</h4>
+                    <p>SIGEP 2.0</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
