@@ -28,6 +28,8 @@ if(preg_match_all("/(\d*[0-9]{2})/", $cedula, $resultado)){
     echo "No hubo resultado";
 }*/
 
+
+
 ?>
 
 <?php if($person!=null):?>

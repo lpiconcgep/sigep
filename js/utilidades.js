@@ -1,4 +1,3 @@
-
 $('#generar_pdf').click(function(e) {
     e.preventDefault();
     $('<form>', {
@@ -209,6 +208,8 @@ function ver_matricula(programa_id,tipo)
 {
     
     location.href = '../../matricula.php?programa_id='+programa_id+'&tipo='+tipo+'&source=reportes';
+      
+
 }
 
 //VALIDACIÓN

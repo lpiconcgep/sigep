@@ -29,6 +29,7 @@ function mostrar_retiro()
 }
 
 
+
 function mostrar_egreso(option = 'dev')
 {
 
@@ -102,6 +103,13 @@ function mostrar_registro_cierre(data, programa_id)
 	var result = buscar_programa_x_id(programa_id);
 
 }
+
+
+
+
+
+
+
 
 
 /*$("#table_facultades").css("display" , "");

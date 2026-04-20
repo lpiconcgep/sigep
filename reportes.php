@@ -180,5 +180,4 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
 <?php } else { 
     print "<script>alert('Debe iniciar sesión.'); window.location='index.php';</script>";
 } 
-
 ?>

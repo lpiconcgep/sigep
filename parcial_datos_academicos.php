@@ -6,7 +6,6 @@
 		{
 			echo "<strong>Inscripciones: </strong>";
 			if($opcio != 2) { $font = '11px'; } else $font = '15px';
-
 			$th_opc_fecha = $estudios_persona[0]['condicion_estudiante_id'] == 5 ? '<th>Fecha Retiro</th>' : '';
 			echo "<table style='font-size: ".$font."' class='table table-bordered'><thead><th>Postgrado</th><th>Estatus</th><th>Fecha Ingreso</th>".$th_opc_fecha."</thead>";
 			foreach($estudios_persona as $estudio)

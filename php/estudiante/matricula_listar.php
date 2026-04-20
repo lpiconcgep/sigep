@@ -26,6 +26,7 @@ ini_set('display_errors',0);
   		$aux_inner_2 = " INNER JOIN extension_plazos ex ON ex.estudiante_programa_id = ep.id ";
   		$cad = ",ex.*";
   	}
+		
 
   	if($_GET['tipo'] == 1)
   		$condicion = "Activo";

@@ -1,9 +1,7 @@
 <?php
-// php/navbar.php
 //session_start();
-ini_set('display_errors',0); 
-?>
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+ ini_set('display_errors',0); ?>
+<nav class="navbar navbar-default" role="navigation">
 <div class="container">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -23,7 +21,7 @@ ini_set('display_errors',0);
       <li><a href="/sigep_prototipo/postgrados.php">POSTGRADOS</a></li>
       <li><a href="/sigep_prototipo/index.php">REGISTRO DE ESTUDIANTES</a></li>
       <li><a href="/sigep_prototipo/reportes.php">REPORTES</a></li>
-      <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] == 1) { ?>
+      <?php if($_SESSION['user_id'] == 1) { ?>
         <li><a href="/sigep_prototipo/cierre_expediente.php">CIERRE</a></li>
       <?php } ?>
     </ul>
@@ -39,6 +37,3 @@ ini_set('display_errors',0);
   </div><!-- /.navbar-collapse -->
 </div>
 </nav>
-
-<!-- IMPORTANTE: Este div espaciador evita que el contenido quede debajo del navbar fijo -->
-<div style="height: 50px;"></div>
