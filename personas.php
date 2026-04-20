@@ -1,4 +1,4 @@
-<?php 
+<?php
 // personas.php
 session_start();
 
@@ -19,6 +19,8 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
 
 <?php include "php/navbar.php"; ?>
 
+<!-- ELIMINADO el div espaciador porque ahora el CSS se encarga con padding-top -->
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -28,33 +30,27 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                     <i class="fas fa-users" style="color: var(--accent-green); margin-right: 15px;"></i>
                     <strong>VER PERSONAS</strong>
                 </h2>
-                <p class="text-muted">Gestión de personas registradas en el sistema</p>
+                <p class="text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    Administre las personas registradas en el sistema
+                </p>
             </div>
             
-            <!-- Botón para agregar persona (modal trigger) -->
-            <div class="content-card fade-in-up" style="padding: 15px;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <button data-toggle="modal" href="#myModal" class="btn-custom btn-success-custom">
-                            <i class="fas fa-user-plus"></i> Agregar Nueva Persona
-                        </button>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <span class="badge" style="background-color: var(--primary-blue); color: white; padding: 8px 15px; font-size: 1rem;">
-                            <i class="fas fa-users"></i> Listado completo
-                        </span>
-                    </div>
-                </div>
+            <!-- Botón Agregar -->
+            <div style="margin-bottom: 20px;">
+                <a data-toggle="modal" href="#myModal" class="btn btn-success">
+                    <i class="fas fa-user-plus"></i> Agregar
+                </a>
             </div>
 
-            <!-- Modal para agregar persona (mejorado) -->
+            <!-- Modal para agregar persona -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <div class="modal-header" style="background: var(--gradient-blue); color: white; border-radius: 5px 5px 0 0;">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: white; opacity: 0.8;">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">
-                                <i class="fas fa-user-plus"></i> Agregar Nueva Persona
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">
+                                <i class="fas fa-user-plus"></i> Agregar
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -64,21 +60,14 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                             ?>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn-custom btn-primary-custom" data-dismiss="modal">
-                                <i class="fas fa-times"></i> Cerrar
-                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
+                    </div>
+                </div>
+            </div>
 
-            <!-- Listado de personas -->
-            <div class="content-card fade-in-up">
-                <h4 class="section-title" style="margin-top: 0;">
-                    <i class="fas fa-list" style="color: var(--accent-green); margin-right: 10px;"></i>
-                    Listado de Personas Registradas
-                </h4>
-                
+            <!-- LISTADO DE PERSONAS (con botones originales) -->
+            <div class="table-container fade-in-up">
                 <?php include "php/personas/listar.php"; ?>
             </div>
             
@@ -86,9 +75,40 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
     </div>
 </div>
 
-<?php 
-    include "includes/footer.php"; 
-?>
+<?php include "includes/footer.php"; ?>
+
+<script>
+$(document).ready(function() {
+    $('#table_personas').DataTable({
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay datos disponibles en la tabla",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "No se encontraron resultados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            },
+            "aria": {
+                "sortAscending": ": activar para ordenar columna ascendente",
+                "sortDescending": ": activar para ordenar columna descendente"
+            }
+        },
+        "pageLength": 10,
+        "lengthMenu": [[5, 10, 25, 50], [5, 10, 25, 50]]
+    });
+});
+</script>
 
 <?php } else { 
     print "<script>alert('Debe iniciar sesión.'); window.location='index.php';</script>";

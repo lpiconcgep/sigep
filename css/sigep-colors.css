@@ -1,6 +1,6 @@
 /* ============================================
    SIGEP - Sistema Integrado de Gestión de Postgrados
-   Estilos con colores suaves
+   Estilos complementarios (sin afectar navbar original)
    ============================================ */
 
 /* Variables CSS - Paleta suave */
@@ -55,150 +55,13 @@
 /* ============================================
    ESTILOS GENERALES
    ============================================ */
+
 body {
     background: var(--gradient-silver);
     font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-dark);
     min-height: 100vh;
     line-height: 1.5;
-    padding-top: 120px;
-}
-
-
-/* ============================================
-   NAVBAR NATURAL
-   ============================================ */
-
-.navbar-default {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-}
-
-.navbar-default .navbar-brand {
-    color: #2B5F8A;
-    font-weight: 600;
-    font-size: 1.3rem;
-}
-
-.navbar-default .navbar-brand i {
-    color: #5BC0BE;
-    margin-right: 5px;
-}
-
-.navbar-default .navbar-brand:hover {
-    color: #1E4A6E;
-}
-
-.navbar-default .navbar-nav > li > a {
-    color: #555555;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.navbar-default .navbar-nav > li > a:hover {
-    color: #2B5F8A;
-    background-color: transparent;
-}
-
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-    color: #2B5F8A;
-    background-color: transparent;
-    border-bottom: 2px solid #5BC0BE;
-}
-
-.navbar-default .navbar-form .form-control {
-    border-radius: 20px;
-    border: 1px solid #e0e0e0;
-}
-
-.navbar-default .navbar-form .form-control:focus {
-    border-color: #5BC0BE;
-    box-shadow: none;
-}
-
-.navbar-default .navbar-form .btn-default {
-    background-color: #5BC0BE;
-    border-color: #5BC0BE;
-    color: white;
-    border-radius: 20px;
-}
-
-.navbar-default .navbar-form .btn-default:hover {
-    background-color: #3A9C9A;
-    border-color: #3A9C9A;
-}
-
-.navbar-default .dropdown-menu {
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.navbar-default .dropdown-menu > li > a {
-    padding: 8px 20px;
-    color: #555555;
-}
-
-.navbar-default .dropdown-menu > li > a:hover {
-    background-color: #f5f5f5;
-    color: #2B5F8A;
-}
-
-.navbar-default .dropdown-menu > li > a i {
-    margin-right: 8px;
-    color: #5BC0BE;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .navbar-default .navbar-nav > .active > a,
-    .navbar-default .navbar-nav > .active > a:hover,
-    .navbar-default .navbar-nav > .active > a:focus {
-        border-bottom: none;
-        background-color: #f5f5f5;
-    }
-    
-    .navbar-default .navbar-form {
-        margin: 10px 15px;
-    }
-    
-    .navbar-default .navbar-form .form-control {
-        width: 100%;
-    }
-}
-
-/* Dropdown usuario */
-.user-dropdown > a {
-    background: rgba(255,255,255,0.1);
-    border-radius: 30px;
-    margin: 8px 10px;
-    padding: 7px 15px !important;
-}
-
-.user-dropdown > a i {
-    margin-right: 5px;
-}
-
-.dropdown-menu {
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    border: none;
-}
-
-.dropdown-menu .user-header {
-    background: var(--gradient-blue);
-    color: white;
-    text-align: center;
-    padding: 15px;
-    border-radius: 10px 10px 0 0;
-}
-
-.dropdown-menu .user-header i {
-    font-size: 3rem;
-    margin-bottom: 10px;
 }
 
 /* ============================================
@@ -210,7 +73,7 @@ body {
     padding: 35px 30px;
     border-radius: 24px;
     margin-bottom: 30px;
-    margin-top: 0;
+    margin-top: 20px;
     box-shadow: var(--shadow-lg);
     position: relative;
     overflow: hidden;
@@ -229,7 +92,7 @@ body {
 
 .page-header h2 {
     color: var(--white);
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 400;
     margin: 0 0 8px 0;
     letter-spacing: -0.5px;
@@ -418,6 +281,7 @@ body {
     padding: 20px;
     box-shadow: var(--shadow-sm);
     margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 /* ============================================
@@ -652,12 +516,12 @@ body {
    ============================================ */
 
 @media (max-width: 768px) {
-    body {
-        padding-top: 60px;
+    .page-header h2 {
+        font-size: 1.5rem;
     }
     
-    .page-header h2 {
-        font-size: 1.6rem;
+    .page-header {
+        padding: 20px;
     }
     
     .content-card {
@@ -668,16 +532,8 @@ body {
         margin-bottom: 20px;
     }
     
-    .navbar-sigep .navbar-nav {
-        margin: 0;
-    }
-    
-    .navbar-sigep .navbar-nav > li > a {
-        padding: 10px 15px;
-    }
-    
-    .user-dropdown > a {
-        margin: 5px 10px;
+    .table-container {
+        padding: 15px;
     }
     
     .table-responsive {
@@ -698,131 +554,33 @@ body {
 }
 
 /* ============================================
-   RESTAURAR BOTONES ORIGINALES DE BOOTSTRAP
+   UTILIDADES
    ============================================ */
 
-/* Restaurar botón btn-warning (amarillo original) */
-.btn-warning {
-    background-color: #f0ad4e !important;
-    border-color: #eea236 !important;
-    color: #fff !important;
-    background-image: none !important;
-    text-shadow: none !important;
+.text-center {
+    text-align: center;
 }
 
-.btn-warning:hover {
-    background-color: #ec971f !important;
-    border-color: #d58512 !important;
+.mt-2 {
+    margin-top: 10px;
 }
 
-/* Restaurar botón btn-primary (azul original) */
-.btn-primary {
-    background-color: #337ab7 !important;
-    border-color: #2e6da4 !important;
-    color: #fff !important;
-    background-image: none !important;
-    text-shadow: none !important;
+.mb-2 {
+    margin-bottom: 10px;
 }
 
-.btn-primary:hover {
-    background-color: #286090 !important;
-    border-color: #204d74 !important;
+/* Estilo para el nombre de usuario en navbar original */
+.name-user {
+    color: #777;
+    margin-top: 15px;
 }
 
-/* Restaurar botón btn-success (verde original) */
-.btn-success {
-    background-color: #5cb85c !important;
-    border-color: #4cae4c !important;
-    color: #fff !important;
-    background-image: none !important;
-    text-shadow: none !important;
+.name-user a {
+    color: #777;
+    text-decoration: none;
 }
 
-.btn-success:hover {
-    background-color: #449d44 !important;
-    border-color: #398439 !important;
-}
-
-/* Restaurar botón btn-default (gris original) */
-.btn-default {
-    background-color: #fff !important;
-    border-color: #ccc !important;
-    color: #333 !important;
-    background-image: none !important;
-    text-shadow: none !important;
-}
-
-.btn-default:hover {
-    background-color: #e6e6e6 !important;
-    border-color: #adadad !important;
-}
-
-/* Restaurar botón btn-danger (rojo original) */
-.btn-danger {
-    background-color: #d9534f !important;
-    border-color: #d43f3a !important;
-    color: #fff !important;
-    background-image: none !important;
-    text-shadow: none !important;
-}
-
-.btn-danger:hover {
-    background-color: #c9302c !important;
-    border-color: #ac2925 !important;
-}
-
-/* Restaurar botón btn-info (celeste original) */
-.btn-info {
-    background-color: #5bc0de !important;
-    border-color: #46b8da !important;
-    color: #fff !important;
-    background-image: none !important;
-    text-shadow: none !important;
-}
-
-.btn-info:hover {
-    background-color: #31b0d5 !important;
-    border-color: #269abc !important;
-
-}
-
-/* ============================================
-   CORRECCIÓN DE MODALES - PRIORIDAD ALTA
-   ============================================ */
-
-/* Forzar que los modales estén por encima de DataTables y otros elementos */
-.modal {
-    z-index: 99999 !important;
-}
-
-.modal-backdrop {
-    z-index: 99990 !important;
-}
-
-.modal-content {
-    z-index: 99999 !important;
-}
-
-/* Asegurar que los inputs dentro del modal sean editables */
-.modal-body input,
-.modal-body select,
-.modal-body textarea,
-.modal-body button {
-    pointer-events: auto !important;
-    background-color: #ffffff !important;
-    opacity: 1 !important;
-    z-index: 100000 !important;
-    position: relative;
-}
-
-/* Eliminar cualquier overlay que bloquee */
-.modal.in .modal-dialog {
-    transform: translate(0, 0);
-    z-index: 100000 !important;
-}
-
-/* DataTables no debe afectar a los modales */
-.dataTables_wrapper {
-    z-index: 1;
-    position: relative;
+.name-user a:hover {
+    color: #333;
+    text-decoration: underline;
 }

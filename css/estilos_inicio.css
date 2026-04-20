@@ -1,0 +1,614 @@
+/* ============================================
+   estilos_inicio.css
+   Estilos específicos para la página de inicio
+   ============================================ */
+
+/* Efecto máquina de escribir - CORREGIDO */
+#typed-text {
+    font-weight: 700;
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #a8e6e3 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    border-right: 4px solid #5BC0BE;
+    padding-right: 8px;
+    animation: blink 0.75s step-end infinite;
+    display: inline-block;
+    min-width: 350px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@keyframes blink {
+    from, to { border-color: transparent; }
+    50% { border-color: #5BC0BE; }
+}
+
+/* Ajuste responsive para el título */
+@media (max-width: 768px) {
+    #typed-text {
+        font-size: 1.3rem;
+        min-width: 250px;
+    }
+}
+
+/* Botones flotantes mejorados */
+.floating-buttons {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.float-btn-group {
+    position: relative;
+}
+
+.float-btn {
+    border: none;
+    border-radius: 50px;
+    padding: 14px 24px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: auto;
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.float-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.float-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.float-btn:hover {
+    transform: translateX(-8px) scale(1.02);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.float-btn i {
+    font-size: 1.3rem;
+    transition: transform 0.3s;
+}
+
+.float-btn:hover i {
+    transform: scale(1.1);
+}
+
+.float-tooltip {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1E4A6E;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    margin-right: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.float-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: #1E4A6E;
+}
+
+.float-btn-group:hover .float-tooltip {
+    opacity: 1;
+    visibility: visible;
+    margin-right: 15px;
+}
+
+.float-btn-help {
+    background: linear-gradient(135deg, #2B5F8A 0%, #3B7AA8 100%);
+}
+
+.float-btn-info {
+    background: linear-gradient(135deg, #5BC0BE 0%, #7ED4D2 100%);
+    color: #1E4A6E;
+}
+
+.float-btn-manual {
+    background: linear-gradient(135deg, #D4A843 0%, #E2BC6E 100%);
+    color: #1E4A6E;
+}
+
+/* Modal SIGEP mejorado */
+.modal-sigep {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-sigep-content {
+    background-color: #ffffff;
+    margin: 2% auto;
+    width: 90%;
+    max-width: 750px;
+    border-radius: 28px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.modal-manual-content {
+    max-width: 850px;
+}
+
+.modal-sigep-header {
+    background: linear-gradient(135deg, #2B5F8A 0%, #3B7AA8 100%);
+    color: white;
+    padding: 22px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-sigep-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.modal-sigep-header h3 i {
+    margin-right: 12px;
+    color: #7ED4D2;
+}
+
+.modal-sigep-close {
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.modal-sigep-close:hover {
+    transform: scale(1.2);
+    color: #5BC0BE;
+}
+
+.modal-sigep-body {
+    padding: 30px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Sección Quiénes Somos mejorada */
+.logo-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.logo-section i {
+    font-size: 4rem;
+    color: #2B5F8A;
+    margin-bottom: 10px;
+}
+
+.logo-section h2 {
+    color: #2B5F8A;
+    margin: 5px 0;
+    font-size: 2rem;
+}
+
+.logo-section p {
+    color: #6C757D;
+}
+
+.description {
+    background: #F5F7F9;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+}
+
+.mission-vision {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.mission, .vision {
+    background: #F5F7F9;
+    padding: 20px;
+    border-radius: 16px;
+    transition: transform 0.3s;
+}
+
+.mission:hover, .vision:hover {
+    transform: translateY(-5px);
+}
+
+.mission h4, .vision h4 {
+    color: #2B5F8A;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.mission h4 i, .vision h4 i {
+    margin-right: 8px;
+    color: #5BC0BE;
+}
+
+.values {
+    margin-top: 25px;
+}
+
+.values h4 {
+    color: #2B5F8A;
+    margin-bottom: 15px;
+}
+
+.values-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.value-badge {
+    background: linear-gradient(135deg, #5BC0BE 0%, #7ED4D2 100%);
+    color: #1E4A6E;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: transform 0.3s;
+}
+
+.value-badge:hover {
+    transform: scale(1.05);
+}
+
+.value-badge i {
+    margin-right: 6px;
+}
+
+.contact-info {
+    margin-top: 25px;
+    text-align: center;
+    padding: 20px;
+    background: #F5F7F9;
+    border-radius: 16px;
+}
+
+.contact-info h4 {
+    color: #2B5F8A;
+    margin-bottom: 10px;
+}
+
+.contact-info p {
+    margin: 5px 0;
+    color: #6C757D;
+}
+
+/* Instrucciones mejoradas */
+.instructions-intro {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #F5F7F9;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.instructions-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.step {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.step:hover {
+    background: #F5F7F9;
+}
+
+.step-number {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #5BC0BE 0%, #7ED4D2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #1E4A6E;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.step-content h4 {
+    color: #2B5F8A;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+}
+
+.step-content p {
+    margin: 0;
+    color: #6C757D;
+}
+
+.step-content ul {
+    margin: 8px 0 0 20px;
+    color: #6C757D;
+}
+
+.step-content li {
+    margin: 3px 0;
+}
+
+.highlight {
+    background: #5BC0BE;
+    padding: 3px 8px;
+    border-radius: 20px;
+    color: #1E4A6E;
+}
+
+.tip {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(212, 168, 67, 0.15);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #B8923A;
+}
+
+.video-tutorial {
+    margin-top: 25px;
+    text-align: center;
+    padding: 15px;
+    background: #F5F7F9;
+    border-radius: 12px;
+}
+
+.video-tutorial a {
+    color: #3A9C9A;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.video-tutorial a:hover {
+    text-decoration: underline;
+}
+
+/* Manual de Usuario mejorado */
+.manual-intro {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: linear-gradient(135deg, #5BC0BE 0%, #7ED4D2 100%);
+    border-radius: 16px;
+    color: #1E4A6E;
+    text-align: center;
+    font-weight: 500;
+}
+
+.manual-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.manual-section {
+    background: #F5F7F9;
+    padding: 18px 22px;
+    border-radius: 16px;
+    transition: all 0.3s;
+}
+
+.manual-section:hover {
+    transform: translateX(5px);
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.manual-section h4 {
+    color: #2B5F8A;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.manual-section p {
+    color: #6C757D;
+    margin-bottom: 8px;
+}
+
+.manual-section ul {
+    margin: 8px 0 0 20px;
+    color: #6C757D;
+}
+
+.manual-section li {
+    margin: 5px 0;
+}
+
+.manual-footer {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.support-info {
+    background: linear-gradient(135deg, #2B5F8A 0%, #3B7AA8 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin: 15px 0;
+}
+
+.support-info h4 {
+    margin: 10px 0;
+}
+
+.support-info i {
+    font-size: 2rem;
+}
+
+/* Feature hint */
+.feature-hint {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #5BC0BE;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.feature-card:hover .feature-hint {
+    opacity: 1;
+}
+
+/* Botón volver arriba */
+.btn-top {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #2B5F8A 0%, #3B7AA8 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s;
+    z-index: 1000;
+    font-size: 1.2rem;
+}
+
+.btn-top:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #5BC0BE 0%, #7ED4D2 100%);
+    color: #1E4A6E;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .floating-buttons {
+        right: 10px;
+        bottom: 10px;
+    }
+    
+    .float-btn span {
+        display: none;
+    }
+    
+    .float-btn {
+        min-width: 50px;
+        width: 50px;
+        padding: 12px;
+        justify-content: center;
+    }
+    
+    .float-btn i {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    
+    .float-tooltip {
+        display: none;
+    }
+    
+    .mission-vision {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .modal-sigep-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .modal-sigep-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-sigep-body {
+        padding: 20px;
+    }
+    
+    .step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .step-content ul {
+        text-align: left;
+    }
+    
+    .values-grid {
+        justify-content: center;
+    }
+    
+    .manual-section:hover {
+        transform: none;
+    }
+}

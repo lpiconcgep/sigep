@@ -1,6 +1,6 @@
 <?php
 // -------------------------------------------------------------
-// estudiantes.php - CON ESTILOS SIGEP MEJORADOS
+// estudiantes.php - Reporte de Estudiantes con estilos SIGEP
 // -------------------------------------------------------------
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -11,6 +11,7 @@ include "../utilidades.php";
 include "../funciones.php";
 include "../conexion.php";
 
+<<<<<<< Updated upstream
 
 // ============================================
 // FUNCIÓN PARA GENERAR PDF MEJORADO
@@ -197,23 +198,29 @@ function generar_pdf_estudiantes($anio, $programa, $facultad, $rows) {
 // ============================================
 
 // Filtros seleccionados
+=======
+// 2) Filtros seleccionados
+>>>>>>> Stashed changes
 $anio = isset($_GET['anio']) && $_GET['anio'] !== '' && is_numeric($_GET['anio']) ? intval($_GET['anio']) : null;
 $programa = isset($_GET['programa']) && $_GET['programa'] !== '' && is_numeric($_GET['programa']) ? intval($_GET['programa']) : null;
 $facultad = isset($_GET['facultad']) && $_GET['facultad'] !== '' && is_numeric($_GET['facultad']) ? intval($_GET['facultad']) : null;
+$estatus = isset($_GET['estatus']) && $_GET['estatus'] !== '' ? $_GET['estatus'] : null;
 
-// Obtener lista de facultades
-$facultades_obj = consultar_facultades();
-$facultades = is_array($facultades_obj) ? $facultades_obj : [];
+// Mapeo de estatus para la consulta
+$estatus_map = [
+    'activo' => [1],
+    'egresado' => [2],
+    'inactivo' => [3, 4],
+    'retirado' => [5, 6]
+];
 
-// Obtener lista de programas FILTRADA POR FACULTAD
-$sqlProgramas = "SELECT p.id, p.nombre 
-                 FROM programa p
-                 INNER JOIN postgrado pg ON p.postgrado_id = pg.id";
-
-if ($facultad !== null && $facultad !== '') {
-    $sqlProgramas .= " WHERE pg.facultad_nucleo_id = $facultad";
+// Convertir el filtro a los IDs correspondientes
+$estatus_ids = [];
+if ($estatus && isset($estatus_map[$estatus])) {
+    $estatus_ids = $estatus_map[$estatus];
 }
 
+<<<<<<< Updated upstream
 $sqlProgramas .= " ORDER BY p.nombre ASC";
 
 $resProgramas = mysqli_query($con, $sqlProgramas);
@@ -247,105 +254,35 @@ if (!$resAnios) {
     // Si hay error, obtenemos todos los años
     $resAnios = mysqli_query($con, "SELECT DISTINCT YEAR(fecha_ingreso) AS anio FROM estudiante_programa ORDER BY anio DESC");
 }
+=======
+$resAnios = filtro_anio($anio,$programa);
+>>>>>>> Stashed changes
 $anios = [];
 while ($r = mysqli_fetch_assoc($resAnios)) {
     $anios[] = $r['anio'];
 }
 
-// ============================================
-// CONSULTA PRINCIPAL
-// ============================================
-$programas_facultad = [];
-if (isset($facultad) && $facultad !== null && $facultad !== '') {
-    // Obtener los postgrados de la facultad
-    $sql_postgrados = "SELECT id FROM postgrado WHERE facultad_nucleo_id = $facultad";
-    $res_postgrados = mysqli_query($con, $sql_postgrados);
-    
-    if ($res_postgrados && mysqli_num_rows($res_postgrados) > 0) {
-        $postgrados_ids = [];
-        while ($row = mysqli_fetch_assoc($res_postgrados)) {
-            $postgrados_ids[] = $row['id'];
-        }
-        $postgrados_str = implode(',', $postgrados_ids);
-        
-        // Obtener los programas de esos postgrados
-        $sql_programas2 = "SELECT id FROM programa WHERE postgrado_id IN ($postgrados_str)";
-        $res_programas2 = mysqli_query($con, $sql_programas2);
-        
-        if ($res_programas2) {
-            while ($row = mysqli_fetch_assoc($res_programas2)) {
-                $programas_facultad[] = $row['id'];
-            }
-        }
-    }
+// Obtener todos los programas (para el selector)
+$sqlProgramas = "SELECT id, nombre FROM programa ORDER BY nombre ASC";
+$resProgramas = mysqli_query($con, $sqlProgramas);
+$programas = [];
+while ($p = mysqli_fetch_assoc($resProgramas)) {
+    $programas[] = $p;
 }
 
-// Consulta principal
-$sql = "SELECT 
-            p.documento_identidad,
-            CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
-            CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
-            pr.nombre AS programa,
-            e.fecha_ingreso, 
-            p.fecha_nacimiento as fecha_nacimiento
-        FROM estudiante_programa e
-        INNER JOIN persona p ON p.id = e.persona_id
-        INNER JOIN programa pr ON pr.id = e.programa_id
-        WHERE 1=1";
+// Obtener facultades
+$facultades_obj = consultar_facultades(); 
+$facultades = (array) $facultades_obj;
 
-$params = [];
-$types = "";
+// 4) Consulta principal dinamica
+include "../query_filtro.php";
 
-if (isset($anio) && $anio !== null) {
-    $sql .= " AND YEAR(e.fecha_ingreso) = ?";
-    $params[] = $anio;
-    $types .= "i";
-}
-if (isset($programa) && $programa !== null) {
-    $sql .= " AND e.programa_id = ?";
-    $params[] = $programa;
-    $types .= "i";
-}
-// Si hay filtro de facultad y encontramos programas
-if (!empty($programas_facultad)) {
-    $ids_string = implode(',', $programas_facultad);
-    $sql .= " AND e.programa_id IN ($ids_string)";
-}
-
-$sql .= " ORDER BY e.fecha_ingreso DESC, p.primer_apellido ASC, p.primer_nombre ASC"; // Orden descendente por fecha
-
-// Ejecutar consulta
-if (!empty($params)) {
-    $stmt = mysqli_prepare($con, $sql);
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, $types, ...$params);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-    } else {
-        $result = false;
-    }
-} else {
-    $result = mysqli_query($con, $sql);
-}
-
-$rows = [];
-if ($result) {
-    while ($r = mysqli_fetch_assoc($result)) {
-        $rows[] = $r;
-    }
-}
-// ============================================
-// FIN DE CONSULTA PRINCIPAL
-// ============================================
-
-// Si se solicita PDF, generar y salir
+// 5) PDF con TCPDF
 if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
-    generar_pdf_estudiantes($anio, $programa, $facultad, $rows);
+   crear_pdf($anio,$programa);
 }
-
-// RUTA CORREGIDA - Subimos dos niveles desde php/reportes/
-$base_path = '../../';
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -354,31 +291,212 @@ $base_path = '../../';
     <title>Reporte de Estudiantes - SIGEP</title>
     
     <!-- Bootstrap 3 -->
-    <link rel="stylesheet" href="<?php echo $base_path; ?>bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Estilos personalizados SIGEP -->
-    <link rel="stylesheet" href="<?php echo $base_path; ?>css/sigep.css">
+    <!-- Estilos SIGEP -->
+    <link rel="stylesheet" href="../../css/sigep.css">
     
     <style>
-        /* Estilos adicionales específicos */
-        .table thead th { 
-            background: var(--primary-blue); 
-            color: white; 
-            text-align: center;
-        }
-        .table tbody tr:hover { 
-            background: rgba(76, 175, 80, 0.1); 
-        }
-        .badge-doc {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 5px 10px;
+        /* Estilos adicionales específicos para este reporte */
+        .filter-card {
+            background: var(--white);
             border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .filter-card .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-card label {
+            color: var(--blue-soft-dark);
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .filter-card .form-control {
+            border-radius: 20px;
+            border: 1px solid var(--silver-soft-dark);
+            transition: all 0.3s;
+        }
+        
+        .filter-card .form-control:focus {
+            border-color: var(--turquoise-soft);
+            box-shadow: 0 0 0 3px rgba(91,192,190,0.2);
+        }
+        
+        /* Botón Filtrar - VERDE */
+        .btn-filtrar {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 28px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            box-shadow: 0 2px 8px rgba(40,167,69,0.3);
+        }
+        
+        .btn-filtrar:hover {
+            background: linear-gradient(135deg, #34ce57 0%, #28a745 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(40,167,69,0.4);
+        }
+        
+        .btn-filtrar i {
+            margin-right: 8px;
+        }
+        
+        /* Botón PDF - ROJO */
+        .btn-pdf {
+            background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 28px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(220,53,69,0.3);
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn-pdf:hover {
+            background: linear-gradient(135deg, #e4606d 0%, #dc3545 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220,53,69,0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-pdf i {
+            margin-right: 8px;
+        }
+        
+        .table thead th {
+            background: var(--gradient-blue);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 12px;
+            border: none;
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(91,192,190,0.08);
+        }
+        
+        .table td {
+            padding: 10px;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-card .form-group {
+                width: 100%;
+            }
+            .btn-filtrar, .btn-pdf {
+                width: 100%;
+                margin-top: 10px;
+                margin-left: 0;
+                text-align: center;
+            }
         }
     </style>
+    
+    <script>
+    // Función para cargar programas por facultad
+    function cargarProgramasPorFacultad() {
+        const facultadId = document.getElementById('facultadSelect').value;
+        const programaSelect = document.getElementById('programaSelect');
+        const programaActual = '<?php echo $programa; ?>';
+        
+        let url = 'get_programas_por_facultad.php';
+        if (facultadId !== '') {
+            url += `?facultad_id=${facultadId}`;
+        }
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                programaSelect.innerHTML = '<option value="">Todos</option>';
+                data.forEach(programa => {
+                    const option = document.createElement('option');
+                    option.value = programa.id;
+                    option.textContent = programa.nombre;
+                    if (programa.id == programaActual) {
+                        option.selected = true;
+                    }
+                    programaSelect.appendChild(option);
+                });
+                cargarAniosPorPrograma();
+            })
+            .catch(error => console.error('Error cargando programas:', error));
+    }
+    
+    // Función para cargar años según programa o facultad
+    function cargarAniosPorPrograma() {
+        const programaId = document.getElementById('programaSelect').value;
+        const facultadId = document.getElementById('facultadSelect').value;
+        const anioSelect = document.getElementById('anioSelect');
+        const anioActual = '<?php echo $anio; ?>';
+        
+        let url = 'get_anios_filtrados.php?';
+        if (programaId !== '') {
+            url += `programa_id=${programaId}`;
+        } else if (facultadId !== '') {
+            url += `facultad_id=${facultadId}`;
+        } else {
+            url = 'get_anios_filtrados.php';
+        }
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                anioSelect.innerHTML = '<option value="">Todos</option>';
+                data.forEach(anio => {
+                    const option = document.createElement('option');
+                    option.value = anio;
+                    option.textContent = anio;
+                    if (anio == anioActual) {
+                        option.selected = true;
+                    }
+                    anioSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error cargando años:', error));
+    }
+    
+    // Eventos
+    document.addEventListener('DOMContentLoaded', function() {
+        const facultadSelect = document.getElementById('facultadSelect');
+        const programaSelect = document.getElementById('programaSelect');
+        
+        facultadSelect.addEventListener('change', function() {
+            cargarProgramasPorFacultad();
+        });
+        
+        programaSelect.addEventListener('change', function() {
+            cargarAniosPorPrograma();
+        });
+        
+        if (facultadSelect.value !== '') {
+            cargarProgramasPorFacultad();
+        } else {
+            cargarAniosPorPrograma();
+        }
+    });
+    </script>
 </head>
 <body>
 
@@ -386,195 +504,170 @@ $base_path = '../../';
 $navbar_path = __DIR__ . '/../navbar.php';
 if (file_exists($navbar_path)) {
     include $navbar_path;
-}
+} 
 ?>
 
-<div class="container">
+<div class="container" style="width: 95%; margin-top: 20px;">
     <div class="row">
         <div class="col-md-12">
+            
             <!-- Encabezado de la página -->
             <div class="page-header fade-in-up">
                 <h2>
-                    <i class="fas fa-users" style="color: var(--accent-green); margin-right: 15px;"></i>
+                    <i class="fas fa-chart-line" style="color: var(--accent-green); margin-right: 15px;"></i>
                     <strong>REPORTE DE ESTUDIANTES</strong>
                 </h2>
                 <p class="text-muted">
                     <i class="fas fa-info-circle"></i> 
-                    Visualice y filtre estudiantes por facultad, programa y año de ingreso
+                    Visualice y filtre estudiantes por facultad, programa, año y estatus
                 </p>
             </div>
             
-            <!-- Botón volver a reportes -->
-            <div class="pull-right" style="margin-bottom: 20px;">
-                <a href="../reportes.php" class="btn-custom btn-primary-custom">
-                    <i class="fas fa-arrow-left"></i> Volver a Reportes
-                </a>
+            <!-- Filtros -->
+            <div class="filter-card fade-in-up">
+                <form method="get" class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="facultadSelect"><i class="fas fa-university"></i> Facultad</label>
+                                <select id="facultadSelect" name="facultad" class="form-control">
+                                    <option value="">Todas</option>
+                                    <?php 
+                                    foreach ($facultades as $fact) {
+                                        $fac = (array) $fact;
+                                    ?>
+                                        <option value="<?php echo $fac['id']; ?>" 
+                                            <?php if ($facultad !== null && $facultad == $fac['id']) echo "selected"; ?>>
+                                            <?php echo htmlspecialchars($fac['nombre']); ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="programaSelect"><i class="fas fa-graduation-cap"></i> Postgrado</label>
+                                <select id="programaSelect" name="programa" class="form-control">
+                                    <option value="">Todos</option>
+                                    <?php foreach ($programas as $pr): ?>
+                                        <option value="<?php echo $pr['id']; ?>" <?php if ($programa !== null && $programa == $pr['id']) echo "selected"; ?>>
+                                            <?php echo htmlspecialchars($pr['nombre']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="anioSelect"><i class="fas fa-calendar"></i> Año</label>
+                                <select id="anioSelect" name="anio" class="form-control">
+                                    <option value="">Todos</option>
+                                    <?php foreach ($anios as $a): ?>
+                                        <option value="<?php echo $a; ?>" <?php if ($anio !== null && $a == $anio) echo "selected"; ?>><?php echo $a; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="estatusSelect"><i class="fas fa-tag"></i> Estatus</label>
+                                <select id="estatusSelect" name="estatus" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="activo" <?php if ($estatus == 'activo') echo "selected"; ?>>Activo</option>
+                                    <option value="egresado" <?php if ($estatus == 'egresado') echo "selected"; ?>>Egresado</option>
+                                    <option value="inactivo" <?php if ($estatus == 'inactivo') echo "selected"; ?>>Inactivo</option>
+                                    <option value="retirado" <?php if ($estatus == 'retirado') echo "selected"; ?>>Retirado/Desincorporado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn-filtrar">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                            <a href="?<?php
+                                $qs = [];
+                                if ($anio !== null) $qs['anio'] = $anio;
+                                if ($programa !== null) $qs['programa'] = $programa;
+                                if ($facultad !== null) $qs['facultad'] = $facultad;
+                                if ($estatus !== null) $qs['estatus'] = $estatus;
+                                $qs['pdf'] = '1';
+                                echo http_build_query($qs);
+                            ?>" class="btn-pdf" target="_blank">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-    </div>
-    
-    <!-- Filtros en tarjeta -->
-    <div class="content-card fade-in-up" style="padding: 15px;">
-        <form method="get" class="form-horizontal">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="facultadSelect" class="control-label" style="font-weight: 600; color: var(--primary-blue);">
-                            <i class="fas fa-university"></i> Facultad:
-                        </label>
-                        <select id="facultadSelect" name="facultad" class="form-control">
-                            <option value="">Todas las facultades</option>
-                            <?php 
-                            if (!empty($facultades)):
-                                foreach ($facultades as $fact):
-                                    $fact_id = is_object($fact) ? $fact->id : $fact['id'];
-                                    $fact_nombre = is_object($fact) ? $fact->nombre : $fact['nombre'];
-                            ?>
-                                <option value="<?php echo $fact_id; ?>" 
-                                    <?php if ($facultad == $fact_id) echo "selected"; ?>>
-                                    <?php echo htmlspecialchars($fact_nombre); ?>
-                                </option>
-                            <?php 
-                                endforeach;
-                            endif; 
-                            ?>
-                        </select>
-                    </div>
-                </div>
+            
+            <!-- Tabla de resultados -->
+            <div class="content-card fade-in-up">
+                <h4 class="section-title" style="margin-top: 0;">
+                    <i class="fas fa-list"></i> Listado de Estudiantes
+                    <?php if (count($rows) > 0): ?>
+                        <span class="badge" style="background: var(--gradient-blue); color: white; margin-left: 10px;">
+                            Total: <?php echo count($rows); ?>
+                        </span>
+                    <?php endif; ?>
+                </h4>
                 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="programaSelect" class="control-label" style="font-weight: 600; color: var(--primary-blue);">
-                            <i class="fas fa-graduation-cap"></i> Programa:
-                        </label>
-                        <select id="programaSelect" name="programa" class="form-control">
-                            <option value="">Todos los programas</option>
-                            <?php foreach ($programas as $pr): ?>
-                                <option value="<?php echo $pr['id']; ?>" <?php if ($programa == $pr['id']) echo "selected"; ?>>
-                                    <?php echo htmlspecialchars($pr['nombre']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label for="anioSelect" class="control-label" style="font-weight: 600; color: var(--primary-blue);">
-                            <i class="fas fa-calendar-alt"></i> Año:
-                        </label>
-                        <select id="anioSelect" name="anio" class="form-control">
-                            <option value="">Todos los años</option>
-                            <?php foreach ($anios as $a): ?>
-                                <option value="<?php echo $a; ?>" <?php if ($anio == $a) echo "selected"; ?>><?php echo $a; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="col-md-2">
-                    <div class="form-group" style="margin-top: 25px;">
-                        <button type="submit" class="btn-custom btn-success-custom" style="width: 100%;">
-                            <i class="fas fa-search"></i> Filtrar
-                        </button>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Documento</th>
+                                <th class="text-center">Apellidos</th>
+                                <th class="text-center">Nombres</th>
+                                <th class="text-center">Programa</th>
+                                <th class="text-center">Estatus</th>
+                                <th class="text-center">Fecha Nac.</th>
+                                <th class="text-center">Fecha Ingreso</th>
+                                <th class="text-center">Fecha Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (count($rows) > 0): ?>
+                                <?php foreach ($rows as $row): ?>
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="badge" style="background: var(--gradient-blue); color: white; padding: 5px 10px; border-radius: 20px;">
+                                                <?php echo htmlspecialchars($row['documento_identidad']); ?>
+                                            </span>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($row['apellidos']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['nombres']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['programa']); ?></td>
+                                        <td class="text-center"><?php echo htmlspecialchars($row['condicion_estudiante']); ?></td>
+                                        <td class="text-center"><?php echo transforma_fecha($row['fecha_nacimiento']); ?></td>
+                                        <td class="text-center"><?php echo transforma_fecha($row['fecha_ingreso']); ?></td>
+                                        <td class="text-center"><?php echo transforma_fecha($row['fecha_registro']); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <i class="fas fa-info-circle" style="font-size: 2rem; color: var(--blue-soft); display: block; margin-bottom: 10px;"></i>
+                                        No se encontraron estudiantes para los filtros seleccionados.
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             
-            <div class="row" style="margin-top: 10px;">
-                <div class="col-md-12">
-                    <a href="?<?php
-                        $qs = [];
-                        if ($anio !== null) $qs['anio'] = $anio;
-                        if ($programa !== null) $qs['programa'] = $programa;
-                        if ($facultad !== null && $facultad !== '') $qs['facultad'] = $facultad;
-                        $qs['pdf'] = '1';
-                        echo http_build_query($qs);
-                    ?>" class="btn-custom btn-primary-custom" target="_blank">
-                        <i class="fas fa-file-pdf"></i> Descargar PDF
-                    </a>
-                    
-                    <a href="estudiantes.php" class="btn-custom" style="background: var(--gray-500); color: white; margin-left: 10px;">
-                        <i class="fas fa-redo-alt"></i> Limpiar Filtros
-                    </a>
-                </div>
+            <!-- Resumen -->
+            <div class="alert alert-info fade-in-up" style="border-radius: 15px;">
+                <i class="fas fa-chart-bar"></i>
+                <strong>Resumen:</strong> Mostrando <?php echo count($rows); ?> estudiantes. Use los filtros para refinar la búsqueda.
             </div>
-        </form>
-    </div>
-    
-    <!-- Resultados -->
-    <div class="content-card fade-in-up">
-        <h4 class="section-title" style="margin-top: 0;">
-            <i class="fas fa-list" style="color: var(--accent-green);"></i>
-            Listado de Estudiantes
-            <?php if (isset($rows) && count($rows) > 0): ?>
-                <span class="badge" style="background-color: var(--primary-blue); color: white; margin-left: 10px;">
-                    Total: <?php echo count($rows); ?>
-                </span>
-            <?php endif; ?>
-        </h4>
-        
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-center">Documento</th>
-                        <th class="text-center">Apellidos</th>
-                        <th class="text-center">Nombres</th>
-                        <th class="text-center">Programa</th>
-                        <th class="text-center">Fecha Nacimiento</th>
-                        <th class="text-center">Fecha Ingreso</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (isset($rows) && count($rows) > 0): ?>
-                        <?php foreach ($rows as $row): ?>
-                            <tr>
-                                <td class="text-center">
-                                    <span class="badge-doc">
-                                        <i class="fas fa-id-card"></i> <?php echo htmlspecialchars($row['documento_identidad']); ?>
-                                    </span>
-                                </td>
-                                <td><i class="fas fa-user" style="color: var(--accent-green); margin-right: 5px;"></i><?php echo htmlspecialchars($row['apellidos']); ?></td>
-                                <td><i class="fas fa-user" style="color: var(--primary-blue); margin-right: 5px;"></i><?php echo htmlspecialchars($row['nombres']); ?></td>
-                                <td><i class="fas fa-graduation-cap" style="color: var(--accent-green); margin-right: 5px;"></i><?php echo htmlspecialchars($row['programa']); ?></td>
-                                <td class="text-center"><?php echo isset($row['fecha_nacimiento']) ? transforma_fecha($row['fecha_nacimiento']) : ''; ?></td>
-                                <td class="text-center"><?php echo isset($row['fecha_ingreso']) ? transforma_fecha($row['fecha_ingreso']) : ''; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="6" class="text-center" style="padding: 30px;">
-                                <i class="fas fa-info-circle" style="font-size: 2rem; color: var(--primary-blue); display: block; margin-bottom: 10px;"></i>
-                                No se encontraron estudiantes para los filtros seleccionados.
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+            
         </div>
     </div>
-    
-    <!-- Resumen rápido -->
-    <div class="row" style="margin-top: 20px; margin-bottom: 30px;">
-        <div class="col-md-12">
-            <div class="alert alert-info" style="background: var(--gradient-silver); border-left: 4px solid var(--primary-blue);">
-                <i class="fas fa-info-circle"></i>
-                <strong>Resumen:</strong> 
-                <?php if (isset($rows) && count($rows) > 0): ?>
-                    Mostrando <?php echo count($rows); ?> estudiantes.
-                <?php else: ?>
-                    No hay estudiantes para mostrar.
-                <?php endif; ?>
-                Use los filtros para refinar la búsqueda.
-            </div>
-        </div>
-    </div>
-    
 </div>
 
-<!-- jQuery y Bootstrap -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<<<<<<< Updated upstream
 <script src="<?php echo $base_path; ?>bootstrap/js/bootstrap.min.js"></script>
 
 <!-- Scripts personalizados SIGEP -->
@@ -607,5 +700,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+=======
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+>>>>>>> Stashed changes
 </body>
 </html>
