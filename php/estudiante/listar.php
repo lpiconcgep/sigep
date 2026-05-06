@@ -50,11 +50,15 @@ $num++;?>
 					<a title="No tiene Prorroga" href="./php/estudiante/prorrogas.php?estudiante_id=<?php echo $r["estudiante_id"];?>" class="btn btn-sm btn-danger"><span style="top: 0px;" class="glyphicon glyphicon-remove-sign"></span></a>
 				<?php } 
 			} ?>
-			<?php if($_SESSION['user_id'] == 1){ 
+			<?php if($_SESSION['user_id'] == 1 or $_SESSION['user_id'] == 8){ 
 				
 				?>
 				<input id="estudiante_programa_id" value='<?php echo $r["estudiante_id"];?>' type="hidden" />
 			<a href="./php/estudiante/movimientos.php?estudiante_programa_id=<?php echo $r["estudiante_id"];?>" title="Movimientos" class="btn btn-sm btn-success"><span style="top: 0px;" class="glyphicon glyphicon-random"></span></a>
+			<?php
+			} 
+			if($_SESSION['user_id'] == 1){ 
+			?> 
 
 			<a id="generar_pdf" href="./generate_pdf.php?estudiante_programa_id=<?php echo $r["estudiante_id"];?>" title="Generar documentos de cierre" class="btn btn-sm btn-primary"><span style="top: 0px;" class="glyphicon glyphicon-forward"></span></a>
 			<?php } ?>
