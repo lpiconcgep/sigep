@@ -37,7 +37,7 @@ $num++;?>
 	<td><?php echo $r["condicion"]; ?></td>
 	<!--td><?php echo $r["estatus"] ?></td-->
 	<td><?php echo transforma_fecha($r["fecha_ingreso"]) ?></td>
-	<td><?php echo $r["fecha_grado"] != '0000-00-00' ?  transforma_fecha($r["fecha_grado"]) : "N/A"; ?></td>
+	<td><?php echo ($r["fecha_grado"] != '0000-00-00' and $r["fecha_grado"] != NULL) ?  transforma_fecha($r["fecha_grado"]) : "N/A"; ?></td>
 	<td><?php echo ($r["fecha_retiro"] != '0000-00-00' and $r["fecha_retiro"] != NULL )?  transforma_fecha($r["fecha_retiro"]) : "N/A"; ?></td>
 	<td style="width:150px;">
 		<?php if($r['estatus_estudiante_id'] != 4) { ?>
