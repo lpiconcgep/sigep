@@ -593,7 +593,7 @@
 		return $resAnios; 
 	}
 
-	function crear_pdf($anio,$programa)
+	function crear_pdf($anio,$programa,$facultad,$estatus)
 	{
 		include "conexion.php";
 		  $tcpdf_path = __DIR__ . '/../libs/TCPDF/tcpdf.php';
@@ -702,4 +702,101 @@
     $pdf->Output($filename, 'I');
     exit;
 	}
+
+	function getProgramasByFacultad($facultadId, $conn) {
+    $programas = [];
+    
+    if (!empty($facultadId)) {
+        $sql = "SELECT id, nombre FROM programas WHERE facultad_id = ? ORDER BY nombre ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $facultadId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $programas[] = $row;
+        }
+        $stmt->close();
+    }
+    
+    return $programas;
+}
+
+/**
+ * Obtiene años disponibles según programas filtrados
+ */
+function getAniosByProgramas($programasIds, $conn) {
+    $anios = [];
+    
+    if (!empty($programasIds)) {
+        $placeholders = implode(',', array_fill(0, count($programasIds), '?'));
+        $sql = "SELECT DISTINCT anio FROM estudiantes WHERE programa_id IN ($placeholders) ORDER BY anio DESC";
+        $stmt = $conn->prepare($sql);
+        
+        // Crear array de tipos (todos enteros)
+        $types = str_repeat('i', count($programasIds));
+        $stmt->bind_param($types, ...$programasIds);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $anios[] = $row['anio'];
+        }
+        $stmt->close();
+    }
+    
+    return $anios;
+}
+
+/**
+ * Obtiene años disponibles para un programa específico
+ */
+function getAniosByPrograma($programaId, $conn) {
+    $anios = [];
+    
+    if (!empty($programaId)) {
+        $sql = "SELECT DISTINCT anio FROM estudiantes WHERE programa_id = ? ORDER BY anio DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $programaId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $anios[] = $row['anio'];
+        }
+        $stmt->close();
+    }
+    
+    return $anios;
+}
+
+
+function getAllProgramas($conn) {
+    $programas = [];
+    
+    $sql = "SELECT id, nombre FROM programas ORDER BY nombre ASC";
+    $result = $conn->query($sql);
+    
+    while ($row = $result->fetch_assoc()) {
+        $programas[] = $row;
+    }
+    
+    return $programas;
+}
+
+
+
+function getAllAnios($conn) {
+    $anios = [];
+    
+    $sql = "SELECT DISTINCT anio FROM estudiantes ORDER BY anio DESC";
+    $result = $conn->query($sql);
+    
+    while ($row = $result->fetch_assoc()) {
+        $anios[] = $row['anio'];
+    }
+    
+    return $anios;
+}
+?>
 ?>

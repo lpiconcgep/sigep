@@ -23,11 +23,15 @@ if ($anio !== null) {
     $params[] = $anio;
     $types .= "i";
 }
+
 if ($programa !== null) {
     $sql .= " AND e.programa_id = ?";
     $params[] = $programa;
     $types .= "i";
+
 }
+
+
 if ($facultad !== null) {
     $sql .= " AND f.id = ?";
     $params[] = $facultad;
@@ -39,11 +43,15 @@ if ($estatus !== null) {
     if ($estatus == 3 || $estatus == 5){
       $sql .= " AND ce.id IN (?,?)";
       if ($estatus == 3) {
-            $params = [3, 4];
+            $params_1 = [3, 4];
         }
         if ($estatus == 5){
-            $params = [5, 6];
+            $params_1 = [5, 6];
         }
+        if (empty($params))
+            $params = $params_1;
+        else
+            $params = array_merge($params, $params_1);
         $types .= "ii";
     }
     else {
@@ -53,6 +61,7 @@ if ($estatus !== null) {
     }
       
 }
+
 
 
 $sql .= " ORDER BY e.fecha_ingreso ASC, p.primer_apellido ASC, p.primer_nombre ASC";
