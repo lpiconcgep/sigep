@@ -826,3 +826,82 @@ body {
     z-index: 1;
     position: relative;
 }
+/* ============================================
+   OPTIMIZACIONES DE CARGA
+   ============================================ */
+
+/* Lazy loading para imágenes (si las hay) */
+img[data-src] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+img[data-src].loaded {
+    opacity: 1;
+}
+
+/* Limitar el tamaño de las tablas para mejorar rendimiento */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* DataTables optimizado */
+.dataTables_wrapper {
+    position: relative;
+    clear: both;
+    zoom: 1;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    width: 200px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 15px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    clear: both;
+    float: left;
+    padding-top: 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    padding-top: 10px;
+    text-align: right;
+}
+
+/* Paginación más rápida */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 4px 10px;
+    margin: 0 2px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* Para evitar que DataTables se congele con muchos datos */
+.dataTables_processing {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 9999;
+}
