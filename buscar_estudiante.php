@@ -6,7 +6,6 @@ include "./php/funciones.php";
 include "./php/utilidades.php";
 
 if (isset($_POST['opcion']) && $_POST['opcion'] != '')
-
 {
 	$opcio = $_POST['opcion'];
 }
@@ -93,7 +92,8 @@ if($persona != NULL)
 
 						</div>
 
-						<?php if($persona != NULL) { 
+						<?php if($persona != NULL) 
+						{ 
 							$cols = $opcio != '4' ? "col-sm-5" : "col-sm-6";
 							?>
 							<div class="<?=$cols?>" style="">
@@ -108,7 +108,8 @@ if($persona != NULL)
 								<br>
 								
 								<?php
-								if(($opcio == '1')  || ($opcio == '2') || ($opcio == '3')) {
+								if(($opcio == '1')  || ($opcio == '2') || ($opcio == '3')) 
+								{
 									include "parcial_datos_academicos.php"; 
 								}
 								else if($opcio == '4'){
@@ -126,49 +127,49 @@ if($persona != NULL)
 								$documento_identidad = $persona->documento_identidad;
 								include "php/estudiante/form_new_estudiante.php"; ?>
 							</div>
-						<?php }
-						elseif($opcio == '2')
-						{
-							
-							$source = 'personal';
-							$opcio = $opcio;
-							$documento_identidad = $persona->documento_identidad;
-							?>
-							<div class="col-sm-6" id="form_registro_retiro" style="display:none"> 
+							<?php }
+							elseif($opcio == '2')
+							{
+								
+								$source = 'personal';
+								$opcio = $opcio;
+								$documento_identidad = $persona->documento_identidad;
+								?>
+								<div class="col-sm-6" id="form_registro_retiro" style="display:none"> 
+								<?php
+									include "php/estudiante/form_retiro_estudio.php";
+								?>
+								</div>
 							<?php
-								include "php/estudiante/form_retiro_estudio.php";
-							?>
-							</div>
-						<?php
-						}
-						elseif($opcio == '3')
-						{
-							$source = 'personal';
-							$opcio = $opcio;
-							$documento_identidad = $persona->documento_identidad;
-							?>
-							<div class="col-sm-6" id="form_registro_egreso" style="display:none"> 
+							}
+							elseif($opcio == '3')
+							{
+								$source = 'personal';
+								$opcio = $opcio;
+								$documento_identidad = $persona->documento_identidad;
+								?>
+								<div class="col-sm-6" id="form_registro_egreso" style="display:none"> 
+								<?php
+									include "php/estudiante/form_egreso_estudio.php";
+								?>
+								</div>
 							<?php
-								include "php/estudiante/form_egreso_estudio.php";
-							?>
-							</div>
-						<?php
-						}
-						elseif($opcio == '4')
-						{
-							$source = 'personal';
-							$opcio = $opcio;
-							$documento_identidad = $persona->documento_identidad;
-							?>
-							<div class="col-sm-6" id="form_registro_cierre" style="display:none"> 
+							}
+							elseif($opcio == '4')
+							{
+								$source = 'personal';
+								$opcio = $opcio;
+								$documento_identidad = $persona->documento_identidad;
+								?>
+								<div class="col-sm-6" id="form_registro_cierre" style="display:none"> 
+								<?php
+									include "php/estudiante/cierre_expediente.php";
+								?>
+								</div>
 							<?php
-								include "php/estudiante/cierre_expediente.php";
-							?>
-							</div>
-						<?php
-						}
+							}
 
-						 } ?>
+						} ?>
 						
 	
 						  <!-- Modal -->

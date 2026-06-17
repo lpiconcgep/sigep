@@ -520,7 +520,7 @@
 		return false;
 	}
 
-		function get_user_sistema($user_id)
+	function get_user_sistema($user_id)
 	{
 		include "conexion.php";
 	
@@ -704,23 +704,23 @@
 	}
 
 	function getProgramasByFacultad($facultadId, $conn) {
-    $programas = [];
-    
-    if (!empty($facultadId)) {
-        $sql = "SELECT id, nombre FROM programas WHERE facultad_id = ? ORDER BY nombre ASC";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $facultadId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        while ($row = $result->fetch_assoc()) {
-            $programas[] = $row;
-        }
-        $stmt->close();
-    }
-    
-    return $programas;
-}
+	    $programas = [];
+	    
+	    if (!empty($facultadId)) {
+	        $sql = "SELECT id, nombre FROM programas WHERE facultad_id = ? ORDER BY nombre ASC";
+	        $stmt = $conn->prepare($sql);
+	        $stmt->bind_param("i", $facultadId);
+	        $stmt->execute();
+	        $result = $stmt->get_result();
+	        
+	        while ($row = $result->fetch_assoc()) {
+	            $programas[] = $row;
+	        }
+	        $stmt->close();
+	    }
+	    
+	    return $programas;
+	}
 
 /**
  * Obtiene años disponibles según programas filtrados
@@ -798,5 +798,4 @@ function getAllAnios($conn) {
     
     return $anios;
 }
-?>
 ?>
