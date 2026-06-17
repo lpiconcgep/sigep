@@ -593,10 +593,11 @@
 		return $resAnios; 
 	}
 
-	function crear_pdf($anio,$programa)
-	{
-		include "conexion.php";
-		  $tcpdf_path = __DIR__ . '/../libs/TCPDF/tcpdf.php';
+	function crear_pdf($anio, $programa, $facultad = null, $estatus = null)
+{
+    global $con;
+    
+    $tcpdf_path = __DIR__ . '/../libs/TCPDF/tcpdf.php';
     if (!file_exists($tcpdf_path)) {
         die("Error: no se encontró TCPDF en la ruta esperada: $tcpdf_path");
     }
@@ -606,16 +607,41 @@
         ob_end_clean();
     }
 
-	/*$sql = "SELECT 
-            p.documento_identidad,
-            CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
-            CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
-            pr.nombre AS programa,
-            e.fecha_ingreso, e.created_at as fecha_registro, p.fecha_nacimiento as fecha_nacimiento
-        FROM estudiante_programa e
-        INNER JOIN persona p ON p.id = e.persona_id
-        INNER JOIN programa pr ON pr.id = e.programa_id
-        WHERE 1=1";
+    // Mapeo de estatus
+    $estatus_map = [
+        'activo' => [1],
+        'egresado' => [2],
+        'inactivo' => [3, 4],
+        'retirado' => [5, 6]
+    ];
+
+
+	// Convertir el filtro a los IDs correspondientes
+	$estatus_ids = [];
+    if ($estatus && isset($estatus_map[$estatus])) {
+        $estatus_ids = $estatus_map[$estatus];
+    }
+
+     $sql = "SELECT
+             p.documento_identidad,
+             CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
+             CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
+             pr.nombre AS programa,
+             e.fecha_ingreso,
+             e.created_at as fecha_registro,
+             p.fecha_nacimiento as fecha_nacimiento,
+             CASE
+                 WHEN e.estatus_estudiante_id = 1 THEN 'Activo'
+                 WHEN e.estatus_estudiante_id = 2 THEN 'Egresado'
+                 WHEN e.estatus_estudiante_id IN (3,4) THEN 'Inactivo'
+                 WHEN e.estatus_estudiante_id IN (5,6) THEN 'Retirado/Desincorporado'
+                 ELSE 'Desconocido'
+             END AS condicion_estudiante
+         FROM estudiante_programa e
+         INNER JOIN persona p ON p.id = e.persona_id
+         INNER JOIN programa pr ON pr.id = e.programa_id
+         WHERE 1=1";
+
 
 		$params = [];
 		$types = "";
@@ -630,6 +656,23 @@
 		    $params[] = $programa;
 		    $types .= "i";
 		}
+
+		if ($facultad !== null) {
+	        $sql .= " AND pr.id IN (SELECT p.id FROM programa p 
+	                  INNER JOIN postgrado pg ON p.postgrado_id = pg.id 
+	                  WHERE pg.facultad_nucleo_id = ?)";
+	        $params[] = $facultad;
+	        $types .= "i";
+	    }
+
+	    if (!empty($estatus_ids)) {
+	        $placeholders = implode(',', array_fill(0, count($estatus_ids), '?'));
+	        $sql .= " AND e.estatus_estudiante_id IN ($placeholders)";
+	        foreach ($estatus_ids as $id) {
+	            $params[] = $id;
+	            $types .= "i";
+	        }
+	    }
 
 		$sql .= " ORDER BY e.fecha_ingreso ASC, p.primer_apellido ASC, p.primer_nombre ASC";
 
@@ -646,8 +689,8 @@
 		    while ($r = mysqli_fetch_assoc($result)) {
 		        $rows[] = $r;
 		    }
-		}*/
-
+		}
+		
 		include "query_filtro.php";
 
 

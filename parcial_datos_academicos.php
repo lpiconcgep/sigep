@@ -31,7 +31,7 @@
 				if($opcio == 3 && $estudio['condicion_estudiante_id'] == 1) { echo '<td><a onclick="javacript:mostrar_registro_egreso('.$estudio['id'].')" style="cursor: pointer" class="btn btn-warning">Registrar egreso</a></td>'; }
 
 				
-				if($opcio == 2 && $estudio['condicion_estudiante_id'] == 2) { echo '<td><a onclick="javacript:mostrar_registro_retiro('.$estudio['id'].')" style="cursor: pointer" class="btn btn-danger">Retirar</a></td>'; }
+				if($opcio == 2 && ($estudio['condicion_estudiante_id'] == 2) || $estudio['condicion_estudiante_id'] == 3 || $estudio['condicion_estudiante_id'] == 4) { echo '<td><a onclick="javacript:mostrar_registro_retiro('.$estudio['id'].')" style="cursor: pointer" class="btn btn-danger">Retirar</a></td>'; }
 				
 				
 

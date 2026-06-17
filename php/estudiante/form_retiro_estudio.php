@@ -32,7 +32,7 @@
   </div>
   <div class="form-group col-sm-12">
     <label for="descripcion_motivo_retiro">Descripción motivo retiro</label>
-    <textarea class="form-control" name="descripcion_motivo_retiro" rows="3">Retiro desincorporaciones masivas</textarea>
+    <textarea class="form-control" name="descripcion_motivo_retiro" rows="3">Desincorporaciones en lote, solicitud CU</textarea>
   </div>
   
   <div class="form-group col-sm-12">
