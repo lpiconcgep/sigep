@@ -27,6 +27,7 @@ $query = $con->query($sql1);
 
 <?php if($query && $query->num_rows > 0): ?>
 
+
 <div class="table-responsive">
     <table id="table_personas" class="table table-personas table-bordered table-hover">
         <thead>

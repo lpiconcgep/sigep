@@ -67,8 +67,11 @@
 		$data['resultado'] = $elementos;
 		$data['name'] = $name_program;
 	}
+<<<<<<< HEAD
 
 
+=======
+	//var_dump($data);
+>>>>>>> 10412c06b9783640dcecd35d39471d762029d4e5
 	echo json_encode($data);
-
 ?>

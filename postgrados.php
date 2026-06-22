@@ -3,6 +3,7 @@
 session_start();
 ini_set('display_errors',0);
 
+
 if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') { 
     
     // Incluir configuración
@@ -16,11 +17,13 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
     
     // Incluir header
     include "includes/header.php";
+
 ?>
 
 <?php include "php/navbar.php"; ?>
 
 <div class="container">
+
     <div class="row">
         <div class="col-md-12">
             <!-- Encabezado de la página -->
@@ -35,6 +38,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                 </p>
             </div>
             
+
             <?php 
             include "php/funciones.php";
             $facultades_obj = consultar_facultades(); 
@@ -111,3 +115,4 @@ $(document).ready(function() {
     print "<script>alert('Debe iniciar sesión.'); window.location='index.php';</script>";
 } 
 ?>
+

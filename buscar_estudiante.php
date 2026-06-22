@@ -6,6 +6,7 @@ include "./php/conexion.php";
 include "./php/funciones.php";
 include "./php/utilidades.php";
 
+
 if(isset($_POST['opcion']) && $_POST['opcion'] != '')
 {
 	$opcio = $_POST['opcion'];
@@ -119,6 +120,7 @@ include "includes/header.php";
 </style>
 
 <?php include "php/navbar.php"; ?>
+
 
 <div class="container">
     <div class="row">

@@ -64,10 +64,14 @@ $sql = "SELECT
                 WHEN e.estatus_estudiante_id IN (3,4) THEN 'Inactivo'
                 WHEN e.estatus_estudiante_id IN (5,6) THEN 'Retirado/Desincorporado'
                 ELSE 'Desconocido'
-            END AS condicion_estudiante
+            END AS condicion_estudiante,
+            f.nombre as facultad
         FROM estudiante_programa e
         INNER JOIN persona p ON p.id = e.persona_id
         INNER JOIN programa pr ON pr.id = e.programa_id
+        INNER JOIN postgrado post ON pr.postgrado_id = post.id
+        INNER JOIN facultad_nucleo f ON post.facultad_nucleo_id = f.id
+        INNER JOIN condicion_estudiante ce ON e.condicion_estudiante_id = ce.id
         WHERE 1=1";
 
 $params = [];
@@ -78,11 +82,44 @@ if (isset($anio) && $anio !== null) {
     $params[] = $anio;
     $types .= "i";
 }
+
 if (isset($programa) && $programa !== null) {
     $sql .= " AND e.programa_id = ?";
     $params[] = $programa;
     $types .= "i";
+
 }
+
+if ($facultad !== null) {
+    $sql .= " AND f.id = ?";
+    $params[] = $facultad;
+    $types .= "i";
+
+}
+if ($estatus !== null) {
+    
+    if ($estatus == 3 || $estatus == 5){
+      $sql .= " AND ce.id IN (?,?)";
+      if ($estatus == 3) {
+            $params_1 = [3, 4];
+        }
+        if ($estatus == 5){
+            $params_1 = [5, 6];
+        }
+        if (empty($params))
+            $params = $params_1;
+        else
+            $params = array_merge($params, $params_1);
+        $types .= "ii";
+    }
+    else {
+        $sql .= " AND ce.id = ?";
+        $params[] = $estatus;
+        $types .= "i";
+    }
+      
+}
+
 
 // Filtro por estatus (agrupado)
 if (!empty($estatus_ids)) {
@@ -94,13 +131,16 @@ if (!empty($estatus_ids)) {
     }
 }
 
+
 // Si hay filtro de facultad y encontramos programas
 if (!empty($programas_facultad)) {
     $ids_string = implode(',', $programas_facultad);
     $sql .= " AND e.programa_id IN ($ids_string)";
 }
 
+
 $sql .= " ORDER BY e.fecha_ingreso DESC, p.primer_apellido ASC, p.primer_nombre ASC";
+
 
 // Ejecutar la consulta
 if (!empty($params)) {

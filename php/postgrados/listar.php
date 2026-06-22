@@ -5,6 +5,7 @@ include "./php/conexion.php";
 
 ini_set('display_errors',0);
 
+
 // Consulta SQL directa
 if (isset($_GET['facultad']) && $_GET['facultad'] !== '') {
     $facultad_id = intval($_GET['facultad']);
@@ -64,3 +65,4 @@ if(!$result) {
         </div>
     <?php endif;
 } ?>
+

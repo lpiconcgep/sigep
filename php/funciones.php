@@ -585,11 +585,12 @@ function filtro_anio($anio,$programa)
 // FUNCIÓN CREAR PDF - CORREGIDA CON COLUMNA ESTATUS
 // ============================================
 
-function crear_pdf($anio, $programa, $facultad = null, $estatus = null)
+function crear_pdf($anio, $programa, $facultad, $estatus)
 {
     global $con;
     
     $tcpdf_path = __DIR__ . '/../libs/TCPDF/tcpdf.php';
+
     if (!file_exists($tcpdf_path)) {
         die("Error: no se encontró TCPDF en la ruta esperada: $tcpdf_path");
     }
@@ -599,92 +600,10 @@ function crear_pdf($anio, $programa, $facultad = null, $estatus = null)
         ob_end_clean();
     }
 
-    // Mapeo de estatus
-    $estatus_map = [
-        'activo' => [1],
-        'egresado' => [2],
-        'inactivo' => [3, 4],
-        'retirado' => [5, 6]
-    ];
 
-    // Convertir el filtro a los IDs correspondientes
-    $estatus_ids = [];
-    if ($estatus && isset($estatus_map[$estatus])) {
-        $estatus_ids = $estatus_map[$estatus];
-    }
+	include "query_filtro.php";
+    
 
-    // Construir la consulta SQL
-    $sql = "SELECT 
-                p.documento_identidad,
-                CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
-                CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
-                pr.nombre AS programa,
-                e.fecha_ingreso, 
-                e.created_at as fecha_registro, 
-                p.fecha_nacimiento as fecha_nacimiento,
-                CASE 
-                    WHEN e.estatus_estudiante_id = 1 THEN 'Activo'
-                    WHEN e.estatus_estudiante_id = 2 THEN 'Egresado'
-                    WHEN e.estatus_estudiante_id IN (3,4) THEN 'Inactivo'
-                    WHEN e.estatus_estudiante_id IN (5,6) THEN 'Retirado/Desincorporado'
-                    ELSE 'Desconocido'
-                END AS condicion_estudiante
-            FROM estudiante_programa e
-            INNER JOIN persona p ON p.id = e.persona_id
-            INNER JOIN programa pr ON pr.id = e.programa_id
-            WHERE 1=1";
-
-    $params = [];
-    $types = "";
-
-    if ($anio !== null) {
-        $sql .= " AND YEAR(e.fecha_ingreso) = ?";
-        $params[] = $anio;
-        $types .= "i";
-    }
-    if ($programa !== null) {
-        $sql .= " AND e.programa_id = ?";
-        $params[] = $programa;
-        $types .= "i";
-    }
-    if ($facultad !== null) {
-        $sql .= " AND pr.id IN (SELECT p.id FROM programa p 
-                  INNER JOIN postgrado pg ON p.postgrado_id = pg.id 
-                  WHERE pg.facultad_nucleo_id = ?)";
-        $params[] = $facultad;
-        $types .= "i";
-    }
-    if (!empty($estatus_ids)) {
-        $placeholders = implode(',', array_fill(0, count($estatus_ids), '?'));
-        $sql .= " AND e.estatus_estudiante_id IN ($placeholders)";
-        foreach ($estatus_ids as $id) {
-            $params[] = $id;
-            $types .= "i";
-        }
-    }
-
-    $sql .= " ORDER BY e.fecha_ingreso DESC, p.primer_apellido ASC, p.primer_nombre ASC";
-
-    // Ejecutar consulta
-    if (!empty($params)) {
-        $stmt = mysqli_prepare($con, $sql);
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, $types, ...$params);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-        } else {
-            $result = false;
-        }
-    } else {
-        $result = mysqli_query($con, $sql);
-    }
-
-    $rows = [];
-    if ($result) {
-        while ($r = mysqli_fetch_assoc($result)) {
-            $rows[] = $r;
-        }
-    }
 
     // Crear PDF en formato horizontal
     $pdf = new TCPDF('L', 'mm', 'A4', true, 'UTF-8', false);
@@ -857,6 +776,102 @@ function crear_pdf($anio, $programa, $facultad = null, $estatus = null)
     // ============================================
     $pdf->Output("reporte_estudiantes.pdf", 'I');
     exit;
+
 }
 
+	function getProgramasByFacultad($facultadId, $conn) {
+	    $programas = [];
+	    
+	    if (!empty($facultadId)) {
+	        $sql = "SELECT id, nombre FROM programas WHERE facultad_id = ? ORDER BY nombre ASC";
+	        $stmt = $conn->prepare($sql);
+	        $stmt->bind_param("i", $facultadId);
+	        $stmt->execute();
+	        $result = $stmt->get_result();
+	        
+	        while ($row = $result->fetch_assoc()) {
+	            $programas[] = $row;
+	        }
+	        $stmt->close();
+	    }
+	    
+	    return $programas;
+	}
+
+/**
+ * Obtiene años disponibles según programas filtrados
+ */
+function getAniosByProgramas($programasIds, $conn) {
+    $anios = [];
+    
+    if (!empty($programasIds)) {
+        $placeholders = implode(',', array_fill(0, count($programasIds), '?'));
+        $sql = "SELECT DISTINCT anio FROM estudiantes WHERE programa_id IN ($placeholders) ORDER BY anio DESC";
+        $stmt = $conn->prepare($sql);
+        
+        // Crear array de tipos (todos enteros)
+        $types = str_repeat('i', count($programasIds));
+        $stmt->bind_param($types, ...$programasIds);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $anios[] = $row['anio'];
+        }
+        $stmt->close();
+    }
+    
+    return $anios;
+}
+
+/**
+ * Obtiene años disponibles para un programa específico
+ */
+function getAniosByPrograma($programaId, $conn) {
+    $anios = [];
+    
+    if (!empty($programaId)) {
+        $sql = "SELECT DISTINCT anio FROM estudiantes WHERE programa_id = ? ORDER BY anio DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $programaId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $anios[] = $row['anio'];
+        }
+        $stmt->close();
+    }
+    
+    return $anios;
+}
+
+
+function getAllProgramas($conn) {
+    $programas = [];
+    
+    $sql = "SELECT id, nombre FROM programas ORDER BY nombre ASC";
+    $result = $conn->query($sql);
+    
+    while ($row = $result->fetch_assoc()) {
+        $programas[] = $row;
+    }
+    
+    return $programas;
+}
+
+
+
+function getAllAnios($conn) {
+    $anios = [];
+    
+    $sql = "SELECT DISTINCT anio FROM estudiantes ORDER BY anio DESC";
+    $result = $conn->query($sql);
+    
+    while ($row = $result->fetch_assoc()) {
+        $anios[] = $row['anio'];
+    }
+    
+    return $anios;
+}
 ?>

@@ -2,6 +2,7 @@
 // personas.php - CON TAMAÑOS DE FUENTE CORREGIDOS
 session_start();
 
+
 if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') { 
     
     // Incluir configuración
@@ -262,6 +263,8 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
 </div>
 
 <?php include "includes/footer.php"; ?>
+
+
 
 <!-- Scripts DataTables -->
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
