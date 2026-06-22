@@ -809,7 +809,7 @@ body {
 .modal-body textarea,
 .modal-body button {
     pointer-events: auto !important;
-    background-color: #ffffff !important;
+    
     opacity: 1 !important;
     z-index: 100000 !important;
     position: relative;
