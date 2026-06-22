@@ -41,4 +41,3 @@ ini_set('display_errors',0);
 </nav>
 
 <!-- IMPORTANTE: Este div espaciador evita que el contenido quede debajo del navbar fijo -->
-<div style="height: 50px;"></div>

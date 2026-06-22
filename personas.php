@@ -206,7 +206,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
 </style>
 
 <?php include "php/navbar.php"; ?>
-
+<div style="height: 50px;"></div>
 <div class="container" style="width: 95%; margin-top: 20px;">
     <div class="row">
         <div class="col-md-12">

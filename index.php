@@ -191,7 +191,7 @@ session_start();
     </style>
 </head>
 <body>
-
+<div style="height: 50px;"></div>
 <?php if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') { ?>
     
     <?php include "php/navbar.php"; ?>

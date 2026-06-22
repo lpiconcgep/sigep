@@ -21,7 +21,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
 ?>
 
 <?php include "php/navbar.php"; ?>
-
+<div style="height: 50px;"></div>
 <div class="container">
 
     <div class="row">
