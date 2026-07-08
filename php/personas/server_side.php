@@ -1,66 +1,82 @@
 <?php
-// php/personas/server_side.php
-include "../conexion.php";
+// php/personas/server_side.php - VERSIÓN SIMPLIFICADA
 
-// Variables de DataTables
-$search = isset($_POST['search']['value']) ? $_POST['search']['value'] : '';
-$order_column = isset($_POST['order'][0]['column']) ? intval($_POST['order'][0]['column']) : 0;
-$order_dir = isset($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 'DESC';
-$start = isset($_POST['start']) ? intval($_POST['start']) : 0;
-$length = isset($_POST['length']) ? intval($_POST['length']) : 10;
+session_start();
 
-// Columnas permitidas para ordenar
-$columns = ['documento_identidad', 'primer_apellido', 'primer_nombre', 'sexo'];
-
-// Construir consulta WHERE
-$where = "1=1";
-if (!empty($search)) {
-    $search = mysqli_real_escape_string($con, $search);
-    $where .= " AND (documento_identidad LIKE '%$search%' 
-                     OR primer_apellido LIKE '%$search%' 
-                     OR segundo_apellido LIKE '%$search%' 
-                     OR primer_nombre LIKE '%$search%' 
-                     OR segundo_nombre LIKE '%$search%')";
+if (!isset($_SESSION['session']) || $_SESSION['session'] != 'true') {
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'No autorizado']);
+    exit;
 }
 
-// Contar total de registros (sin filtro)
-$sql_total = "SELECT COUNT(*) as total FROM persona";
-$result_total = $con->query($sql_total);
-$total_registros = $result_total->fetch_assoc()['total'];
+$base_path = __DIR__ . '/../';
+include $base_path . "conexion.php";
 
-// Contar registros filtrados
-$sql_filtered = "SELECT COUNT(*) as total FROM persona WHERE $where";
-$result_filtered = $con->query($sql_filtered);
-$total_filtrados = $result_filtered->fetch_assoc()['total'];
+if (!isset($con) || !$con) {
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Error de conexión']);
+    exit;
+}
 
-// Obtener datos con orden y límite
-$order_by = isset($columns[$order_column]) ? $columns[$order_column] : 'id';
-$sql = "SELECT id, nacionalidad, documento_identidad, primer_apellido, segundo_apellido, 
-               primer_nombre, segundo_nombre, sexo 
-        FROM persona 
-        WHERE $where 
-        ORDER BY $order_by $order_dir 
+// Parámetros
+$draw = isset($_POST['draw']) ? intval($_POST['draw']) : 1;
+$start = isset($_POST['start']) ? intval($_POST['start']) : 0;
+$length = isset($_POST['length']) ? intval($_POST['length']) : 10;
+$search = isset($_POST['search']['value']) ? trim($_POST['search']['value']) : '';
+
+// Construir WHERE
+$where = "";
+if (!empty($search)) {
+    $s = mysqli_real_escape_string($con, $search);
+    $where = "WHERE (
+        documento_identidad LIKE '%$s%' OR
+        primer_apellido LIKE '%$s%' OR
+        segundo_apellido LIKE '%$s%' OR
+        primer_nombre LIKE '%$s%' OR
+        segundo_nombre LIKE '%$s%'
+    )";
+}
+
+// Total
+$count_sql = "SELECT COUNT(*) as total FROM persona $where";
+$count_result = mysqli_query($con, $count_sql);
+$total = 0;
+if ($count_result) {
+    $row = mysqli_fetch_assoc($count_result);
+    $total = $row['total'];
+}
+
+// Datos
+$sql = "SELECT id, documento_identidad, primer_apellido, segundo_apellido, primer_nombre, segundo_nombre, sexo, nacionalidad 
+        FROM persona $where 
+        ORDER BY id DESC 
         LIMIT $start, $length";
-
-$result = $con->query($sql);
+$result = mysqli_query($con, $sql);
 
 $data = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = mysqli_fetch_assoc($result)) {
+    $sexo = 'No especificado';
+    if ($row['sexo'] == 'M') $sexo = 'Masculino';
+    elseif ($row['sexo'] == 'F') $sexo = 'Femenino';
+    
     $data[] = [
-        'documento' => $row['nacionalidad'] . ' - ' . $row['documento_identidad'],
-        'apellidos' => strtoupper($row['primer_apellido'] . ' ' . $row['segundo_apellido']),
-        'nombres' => strtoupper($row['primer_nombre'] . ' ' . $row['segundo_nombre']),
-        'sexo' => $row['sexo'],
-        'acciones' => '<a href="./php/personas/editar.php?sour=list&id=' . $row['id'] . '" class="btn btn-warning btn-sm">Editar</a> 
-                       <a href="estudios.php?sour=list&id=' . $row['id'] . '" class="btn btn-primary btn-sm">Estudios</a>'
+        'documento_identidad' => $row['nacionalidad'] . ' - ' . $row['documento_identidad'],
+        'apellidos' => strtoupper($row['primer_apellido']) . ' ' . strtoupper($row['segundo_apellido']),
+        'nombres' => strtoupper($row['primer_nombre']) . ' ' . strtoupper($row['segundo_nombre']),
+        'sexo' => $sexo,
+        'acciones' => '
+            <a href="./php/personas/editar.php?sour=list&id=' . $row['id'] . '" class="btn btn-warning btn-sm">Editar</a>
+            <a href="estudios.php?sour=list&id=' . $row['id'] . '" class="btn btn-primary btn-sm">Estudios</a>
+        '
     ];
 }
 
-// Devolver respuesta JSON
+header('Content-Type: application/json');
 echo json_encode([
-    'draw' => isset($_POST['draw']) ? intval($_POST['draw']) : 1,
-    'recordsTotal' => $total_registros,
-    'recordsFiltered' => $total_filtrados,
+    'draw' => $draw,
+    'recordsTotal' => $total,
+    'recordsFiltered' => $total,
     'data' => $data
 ]);
+exit;
 ?>
