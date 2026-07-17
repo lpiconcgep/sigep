@@ -30,7 +30,7 @@
 			foreach ($elementos as $valor) {
 				$elemento = array();
 	        	$elemento['id'] = $valor->id;
-	        	$elemento['nombre'] = utf8_encode($valor->nombre);
+	        	$elemento['nombre'] = $valor->nombre;
 	        	$resultado[] = $elemento;
 	        } 
 
@@ -67,7 +67,6 @@
 		$data['resultado'] = $elementos;
 		$data['name'] = $name_program;
 	}
-
+	//var_dump($data);
 	echo json_encode($data);
-
 ?>

@@ -245,5 +245,94 @@ if (file_exists($navbar_path)) {
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+// Función para cargar programas según la facultad seleccionada
+function cargarProgramasPorFacultad() {
+    const facultadId = document.getElementById('facultadSelect').value;
+    const programaSelect = document.getElementById('programaSelect');
+    const anioSelect = document.getElementById('anioSelect');
+    const programaActual = '<?php echo $programa; ?>';
+    const anioActual = '<?php echo $anio; ?>';
+    
+    if (facultadId === '') {
+        // Si selecciona "Todos", recargar la página para resetear filtros
+        window.location.href = window.location.pathname;
+        return;
+    }
+    
+    // Llamar al backend para obtener programas de esa facultad
+    fetch(`get_programas_por_facultad.php?facultad_id=${facultadId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Limpiar y llenar select de programas
+            programaSelect.innerHTML = '<option value="">Todos</option>';
+            
+            data.programas.forEach(programa => {
+                const option = document.createElement('option');
+                option.value = programa.id;
+                option.textContent = programa.nombre;
+                if (programa.id == programaActual) {
+                    option.selected = true;
+                }
+                programaSelect.appendChild(option);
+            });
+            
+            // Actualizar años según los programas de esa facultad
+            anioSelect.innerHTML = '<option value="">Todos</option>';
+            data.anios.forEach(anio => {
+                const option = document.createElement('option');
+                option.value = anio;
+                option.textContent = anio;
+                if (anio == anioActual) {
+                    option.selected = true;
+                }
+                anioSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Función para cargar años según el programa seleccionado
+function cargarAniosPorPrograma() {
+    const programaId = document.getElementById('programaSelect').value;
+    const anioSelect = document.getElementById('anioSelect');
+    const anioActual = '<?php echo $anio; ?>';
+    
+    if (programaId === '') {
+        // Si no hay programa, recargar la página para resetear
+        window.location.href = window.location.pathname;
+        return;
+    }
+    
+    fetch(`get_anios_por_programa.php?programa_id=${programaId}`)
+        .then(response => response.json())
+        .then(data => {
+            anioSelect.innerHTML = '<option value="">Todos</option>';
+            
+            data.forEach(anio => {
+                const option = document.createElement('option');
+                option.value = anio;
+                option.textContent = anio;
+                if (anio == anioActual) {
+                    option.selected = true;
+                }
+                anioSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Eventos cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    const facultadSelect = document.getElementById('facultadSelect');
+    const programaSelect = document.getElementById('programaSelect');
+    
+    // Evento cambio de facultad
+    facultadSelect.addEventListener('change', cargarProgramasPorFacultad);
+    
+    // Evento cambio de programa
+    programaSelect.addEventListener('change', cargarAniosPorPrograma);
+});
+</script>
 </body>
 </html>
