@@ -156,12 +156,12 @@ while ($r_e=$query_e->fetch_array())
 						      <div class="col-sm-4" style="text-align: left">
 						          <input type="text" class="form-control" name="fecha_grado" value="<?=transforma_fecha($mov->fecha_grado)?>" readonly="1" />
 						      </div>
-						      <div class="col-sm-2">
+						      <!--div class="col-sm-2">
 						        <label for="num_pergamino" >N° de pergamino: </label>
 						      </div>
 						      <div class="col-sm-2" style="text-align: left">
 						          <input type="text" class="form-control" name="num_pergamino" value="<?=$mov->num_pergamino?>" readonly="1" />
-						      </div>
+						      </div-->
 						  	</div>
 						  	<br />
 						  	<div style="font-size: 14px;" class="row">

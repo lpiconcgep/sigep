@@ -40,7 +40,7 @@ function agregar_movimiento($POST = NULL, $tipo = NULL){
         }
     }
     elseif ($tipo == "2") { /* OPCION == 2 -> EGRESAR ESTUDIANTE */
-
+        var_dump("entro a funciones linea 43");
         $estudiante_programa_id = $_POST['id'];    
         $sql_mov = "insert into movimiento_estudiante(estudiante_programa_id, tipo_movimiento_id,created_at,user_create) value (".$estudiante_programa_id.",".$tipo.",NOW(),".$_SESSION['user_id'].")";
 

@@ -267,7 +267,7 @@ include "includes/header.php";
     </div>
 </div>
 
-<?php include "includes/footer.php"; ?>
+<?php include "includes/footer.php"; /* ?>
 
 <script>
 $(document).ready(function() {
@@ -282,7 +282,7 @@ $(document).ready(function() {
 });
 </script>
 
-<?php if(!isset($_SESSION['session']) || $_SESSION['session'] != 'true') { 
+<?php */ if(!isset($_SESSION['session']) || $_SESSION['session'] != 'true') { 
     print "<script>alert('Debe iniciar sesión.'); window.location='index.php';</script>";
 } 
 ?>

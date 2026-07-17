@@ -2,51 +2,56 @@
 session_start();
 include "../../php/conexion.php";
 
-$sql1= "select pg.id as programa_id, pg.nombre as programa, p.*, ep.persona_id, ep.id as estudiante_programa_id from estudiante_programa ep 
-		INNER JOIN persona p ON ep.persona_id = p.id 
-		INNER JOIN programa pg ON ep.programa_id = pg.id 
-		where ep.id = ".$_GET["estudiante_programa_id"];
 
-$query = $con->query($sql1);
-$person = null;
+if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') { 
+    
+    // Incluir configuración
+    require_once "../../includes/config.php";
+    
+    // Título de la página
+    $page_title = "Gestión de Movimientos estudiantiles";
+    
+    // Ruta base
+    $base = '../../';
+    
+    // Incluir header
+    include $base."includes/header.php";
+    include $base."php/navbar.php"; 
 
-if($query->num_rows>0){
-while ($r=$query->fetch_object()){
-  $person=$r;
-  break;
-  }
-}
+    $sql1= "select pg.id as programa_id, pg.nombre as programa, p.*, ep.persona_id, ep.id as estudiante_programa_id from estudiante_programa ep 
+    		INNER JOIN persona p ON ep.persona_id = p.id 
+    		INNER JOIN programa pg ON ep.programa_id = pg.id 
+    		where ep.id = ".$_GET["estudiante_programa_id"];
 
-$nombre = $person->primer_apellido." ".$person->primer_nombre;
-$cedula = $person->nacionalidad." - ".$person->documento_identidad;
-$programa = $person->programa;
-$programa_id = $person->programa_id;
+    $query = $con->query($sql1);
+    $person = null;
 
-?>
-<html>
-	<head>
-		<title>.: SIGEP :.</title>
-		<link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
-		<script src="/sigep_prototipo/js/jquery.min.js"></script>
-    <script src="/sigep_prototipo/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-     
-        $(".nvo").css("display" , "none");
-        
-    </script>
-	</head>
-	<body>
-  	<?php include "../../php/navbar.php"; ?>
+    if($query->num_rows>0){
+    while ($r=$query->fetch_object()){
+      $person=$r;
+      break;
+      }
+    }
+
+    $nombre = $person->primer_apellido." ".$person->primer_nombre;
+    $cedula = $person->nacionalidad." - ".$person->documento_identidad;
+    $programa = $person->programa;
+    $programa_id = $person->programa_id;
+
+
+    ?>
+
     <div class="container">
     	
       <div class="row">
         <div class="col-md-12">
-        	  <h4 style="border: 1px solid #5cb85c; padding: 15px; border-radius: 8px">
+          <div class="page-header">
+        	  <h4 >
               ESTUDIANTE:  <strong><?php echo strtoupper($nombre);?></strong>
-              
               <?php echo "<br/> CÉDULA: <strong>".$cedula."<br/></strong>"; ?>
               POSTGRADO:<strong> <?php echo strtoupper($programa); ?></strong>
             </h4>
+          </div>
             <div class="col-sm-2">
             	<a data-toggle="modal" href="#myModal_<?=$_GET["estudiante_programa_id"]?>" class="btn btn-success">Agregar</a>
             </div>
@@ -80,8 +85,8 @@ $programa_id = $person->programa_id;
         </div>
       </div>
     </div>
-
-  
-    <script src="/sigep_prototipo/js/utilidades.js"></script>
-	</body>
-</html>
+<?php include "../../includes/footer.php"; 
+} else { 
+    print "<script>alert('Debe iniciar sesión.'); window.location='index.php';</script>";
+} 
+?>

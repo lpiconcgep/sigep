@@ -24,7 +24,9 @@ if(!empty($_POST))
 
 			$sql = "UPDATE estudiante_programa SET condicion_estudiante_id = 2,estatus_estudiante_id = 4,fecha_egreso='".$fecha_egreso."',fecha_cierre='".$fecha_cierre."',fecha_grado='".$fecha_grado."',observaciones_cierre='".$_POST['observaciones_cierre']."',update_at = NOW(),user_update = ".$_SESSION['user_id']." WHERE id=".$_POST['id'];
 		
+		
 			$query = $con->query($sql);
+
 			if($query!=null){
 				$opc = $_POST['opcion'];
 				/*if($_SESSION['user_id'] == 1)

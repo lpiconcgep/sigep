@@ -32,9 +32,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
     
     // Incluir header
     include "includes/header.php";
-?>
-
-<?php include "php/navbar.php"; ?>
+    include "php/navbar.php"; ?>
 
 <div class="container">
     <div class="row">
@@ -45,9 +43,11 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                 $back = $_GET['sour']; 
                 if($back == 'list') {
                     $url_back = "/sigep_prototipo/personas.php";
-                } else {
+                } else if(isset($_GET['s'])) {
                     $url_back = "/sigep_prototipo/buscar.php?s=" . $_GET['s'];
                 }
+                else
+                    $url_back = "/sigep_prototipo/personas.php";
                 ?>
                 <a href="<?php echo $url_back; ?>" class="btn btn-danger">
                     <i class="fas fa-arrow-left"></i> Ir atrás
