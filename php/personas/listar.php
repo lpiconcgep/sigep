@@ -7,7 +7,7 @@ ini_set('display_errors',0);
 
 // Obtener el número de página actual
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-$limit = 20; // Registros por página
+$limit = 10000; // Registros por página
 $offset = ($page - 1) * $limit;
 
 // Contar el total de registros
