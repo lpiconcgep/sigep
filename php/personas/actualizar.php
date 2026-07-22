@@ -13,7 +13,7 @@ if(!empty($_POST))
 		{
 			include "../conexion.php";
 			
-			$sql = "update persona set tipo_documento_identidad=\"$_POST[tipo_documento_identidad]\", 
+			$sql = "update persona set documento_identidad=\"$_POST[documento_identidad]\",     tipo_documento_identidad=\"$_POST[tipo_documento_identidad]\", 
 					primer_nombre=\"$_POST[primer_nombre]\",segundo_nombre=\"$_POST[segundo_nombre]\",
 					primer_apellido=\"$_POST[primer_apellido]\",segundo_apellido=\"$_POST[segundo_apellido]\",
 					sexo=\"$_POST[sexo]\",nacionalidad=\"$_POST[nacionalidad]\",pais_origen_id =\"$_POST[pais_origen_id]\",
