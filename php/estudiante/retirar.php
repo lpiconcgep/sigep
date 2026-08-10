@@ -8,7 +8,7 @@ if(!empty($_POST))
 {
 	if(isset($_POST["id"]) && isset($_POST["motivo_retiro_id"]) && isset($_POST["fecha_retiro"]) )
 	{
-		if($_POST["id"]!="" && $_POST["id"]!="0" && $_POST["motivo_retiro_id"]!="" && $_POST["fecha_retiro"]!="" )
+		if($_POST["id"]!="" && $_POST["id"]!="0" && $_POST["motivo_retiro_id"]!="" && trim($_POST["descripcion_motivo_retiro"]) != "" && $_POST["fecha_retiro"]!="" )
 		{
 			include "../conexion.php";
 			include "../funciones.php";
@@ -19,7 +19,7 @@ if(!empty($_POST))
 			
 			$persona_id = $_POST['persona_id'];
 
-			$sql = "UPDATE estudiante_programa SET condicion_estudiante_id = 5,estatus_estudiante_id = 5,fecha_grado='".$fecha_grado."',fecha_retiro='".$fecha_retiro."',fecha_registro_retiro='".$fecha_registro_retiro."',observaciones_retiro='".$_POST['observaciones_retiro']."',update_at = NOW(),user_update = ".$_SESSION['user_id']." WHERE id=".$_POST['id'];
+			$sql = "UPDATE estudiante_programa SET condicion_estudiante_id = 5,estatus_estudiante_id = 5,fecha_grado='".$fecha_grado."',motivo_retiro_id='".$_POST["motivo_retiro_id"]."',fecha_retiro='".$fecha_retiro."',fecha_registro_retiro='".$fecha_registro_retiro."',observaciones_retiro='".$_POST['observaciones_retiro']."',update_at = NOW(),user_update = ".$_SESSION['user_id']." WHERE id=".$_POST['id'];
 		
 			$query = $con->query($sql);
 			if($query!=null){
