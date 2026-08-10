@@ -13,6 +13,16 @@ if (!isset($con) || !$con) {
 }
 
 $facultad_id = isset($_GET['facultad_id']) ? intval($_GET['facultad_id']) : 0;
+$opt = isset($_GET['opt']) ? $_GET['opt'] : "";
+
+
+if($opt != "" && $opt == 'retirados')
+{
+    $aux_cad = " AND ep.condicion_estudiante_id IN (5,6)";
+}
+else
+    $aux_cad = "";
+
 
 $response = [
     'programas' => [],
@@ -20,10 +30,12 @@ $response = [
 ];
 
 if ($facultad_id > 0) {
-    $sql_programas = "SELECT p.id, p.nombre 
+    $sql_programas = "SELECT DISTINCT(p.id), p.nombre 
                       FROM programa p
                       INNER JOIN postgrado po ON p.postgrado_id = po.id
+                      INNER JOIN estudiante_programa ep ON ep.programa_id = p.id
                       WHERE po.facultad_nucleo_id = $facultad_id
+                       ".$aux_cad."
                       ORDER BY p.nombre ASC";
     
     $result_programas = mysqli_query($con, $sql_programas);
@@ -38,9 +50,11 @@ if ($facultad_id > 0) {
                   FROM estudiante_programa e
                   INNER JOIN programa p ON e.programa_id = p.id
                   INNER JOIN postgrado po ON p.postgrado_id = po.id
+                  INNER JOIN estudiante_programa ep ON ep.programa_id = p.id
                   WHERE po.facultad_nucleo_id = $facultad_id
                   AND e.fecha_ingreso IS NOT NULL
                   AND YEAR(e.fecha_ingreso) IS NOT NULL
+                  ".$aux_cad."
                   ORDER BY anio ASC";
     
     $result_anios = mysqli_query($con, $sql_anios);

@@ -718,9 +718,16 @@ function crear_pdf($anio, $programa, $facultad, $estatus)
     $pdf->Cell($ancho_col3, 8, 'Nombres', 1, 0, 'C', true);
     $pdf->Cell($ancho_col4, 8, 'Programa', 1, 0, 'C', true);
     $pdf->Cell($ancho_col5, 8, 'Estatus', 1, 0, 'C', true);
-    $pdf->Cell($ancho_col6, 8, 'Fecha Nac.', 1, 0, 'C', true);
+    if($estatus != 'retirado')
+        $pdf->Cell($ancho_col6, 8, 'Fecha Nac.', 1, 0, 'C', true);
     $pdf->Cell($ancho_col7, 8, 'Fecha Ingreso', 1, 0, 'C', true);
-    $pdf->Cell($ancho_col8, 8, 'Fecha Registro', 1, 1, 'C', true);
+    if($estatus != 'retirado')
+        $pdf->Cell($ancho_col8, 8, 'Fecha Registro', 1, 1, 'C', true);
+    if($estatus == 'retirado')
+        $pdf->Cell($ancho_col8, 8, 'Fecha Retiro', 1, 1, 'C', true);
+     if($estatus == 'egresado')
+        $pdf->Cell($ancho_col8, 8, 'Fecha Grado', 1, 1, 'C', true);
+
     
     // Restaurar colores para las filas
     $pdf->SetFillColor(245, 245, 245);
@@ -744,9 +751,19 @@ function crear_pdf($anio, $programa, $facultad, $estatus)
             $pdf->Cell($ancho_col3, 7, htmlspecialchars($nombres), 1, 0, 'L', $fill);
             $pdf->Cell($ancho_col4, 7, htmlspecialchars($programa_txt), 1, 0, 'L', $fill);
             $pdf->Cell($ancho_col5, 7, htmlspecialchars($row['condicion_estudiante']), 1, 0, 'C', $fill);
-            $pdf->Cell($ancho_col6, 7, isset($row['fecha_nacimiento']) ? transforma_fecha($row['fecha_nacimiento']) : '', 1, 0, 'C', $fill);
+            if($estatus != 'retirado'){
+                $pdf->Cell($ancho_col6, 7, isset($row['fecha_nacimiento']) ? transforma_fecha($row['fecha_nacimiento']) : '', 1, 0, 'C', $fill);
+            }
+            
             $pdf->Cell($ancho_col7, 7, isset($row['fecha_ingreso']) ? transforma_fecha($row['fecha_ingreso']) : '', 1, 0, 'C', $fill);
-            $pdf->Cell($ancho_col8, 7, isset($row['fecha_registro']) ? transforma_fecha($row['fecha_registro']) : '', 1, 1, 'C', $fill);
+            if($estatus != 'retirado'){
+                $pdf->Cell($ancho_col8, 7, isset($row['fecha_registro']) ? transforma_fecha($row['fecha_registro']) : '', 1, 1, 'C', $fill);
+            }
+            if($estatus == 'retirado'){
+                $pdf->Cell($ancho_col8, 7, isset($row['fecha_retiro']) ? transforma_fecha($row['fecha_retiro']) : '', 1, 1, 'C', $fill);
+            }
+
+            
         }
         
         // Fila de total
@@ -873,5 +890,37 @@ function getAllAnios($conn) {
     }
     
     return $anios;
+}
+
+function debugQuery($sql, $types, $params, $con) {
+
+    //echo debugQuery($sql, $types, $params, $con);
+    // Recorremos los parámetros y reemplazamos los '?'
+    $parts = explode('?', $sql);
+    $debugSql = '';
+    $paramIndex = 0;
+    $typeArray = str_split($types); // separamos los tipos
+
+    foreach ($parts as $i => $part) {
+        $debugSql .= $part;
+        if ($i < count($params)) {
+            $value = $params[$i];
+            $type  = $typeArray[$i] ?? 's';
+            
+            // Escapamos según el tipo
+            if ($type == 's' || $type == 'b') {
+                // string o blob: entre comillas y escapado
+                $value = "'" . mysqli_real_escape_string($con, $value) . "'";
+            } elseif ($type == 'i' || $type == 'd') {
+                // números: sin comillas, pero aseguramos que sea numérico
+                $value = is_numeric($value) ? $value : 0;
+            } else {
+                // por defecto, tratamos como string
+                $value = "'" . mysqli_real_escape_string($con, $value) . "'";
+            }
+            $debugSql .= $value;
+        }
+    }
+    return $debugSql;
 }
 ?>

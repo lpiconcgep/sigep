@@ -23,6 +23,19 @@ $estatus_ids = [];
 if (isset($estatus) && $estatus !== null && $estatus !== '' && isset($estatus_map[$estatus])) {
     $estatus_ids = $estatus_map[$estatus];
 }
+/*
+if(isset($option_report) && $option_report == 'retiros' ){
+    $sql_select = ", mr.nombre motivo_retiro ";
+    $aux_movimiento = " LEFT JOIN movimiento_estudiante me ON me.estudiante_programa_id = e.id 
+                        LEFT JOIN descripcion_movimiento dm ON dm.movimiento_estudiante_id = me.id
+                        LEFT JOIN motivo_retiro mr ON mr.id = dm.motivo_retiro_id
+                        ";
+    
+}
+else{
+    $sql_select = "";
+    $aux_movimiento = "";
+}*/
 
 // Si hay filtro de facultad, obtenemos los programas de esa facultad
 $programas_facultad = [];
@@ -56,7 +69,7 @@ $sql = "SELECT
             CONCAT_WS(' ', p.primer_apellido, p.segundo_apellido) AS apellidos,
             CONCAT_WS(' ', p.primer_nombre, p.segundo_nombre) AS nombres,
             pr.nombre AS programa,
-            e.fecha_ingreso, 
+            e.fecha_ingreso, e.fecha_retiro,e.motivo_retiro_id,
             e.created_at as fecha_registro, 
             p.fecha_nacimiento as fecha_nacimiento,
             CASE 
@@ -67,14 +80,16 @@ $sql = "SELECT
                 ELSE 'Desconocido'
             END AS condicion_estudiante,
             f.nombre as facultad
+           
         FROM estudiante_programa e
         INNER JOIN persona p ON p.id = e.persona_id
         INNER JOIN programa pr ON pr.id = e.programa_id
         INNER JOIN postgrado post ON pr.postgrado_id = post.id
         INNER JOIN facultad_nucleo f ON post.facultad_nucleo_id = f.id
         INNER JOIN condicion_estudiante ce ON e.condicion_estudiante_id = ce.id
+        
         WHERE 1=1";
-
+//var_dump($sql);
 $params = [];
 $types = "";
 
@@ -143,9 +158,16 @@ if (!empty($programas_facultad)) {
     $ids_string = implode(',', $programas_facultad);
     $sql .= " AND e.programa_id IN ($ids_string)";
 }
+/*
+if(isset($option_report) && $option_report == 'retiros' )
+{
+    $sql .= " AND me.tipo_movimiento_id = 3";
+}*/
 
-
-$sql .= " ORDER BY e.fecha_ingreso DESC, p.primer_apellido ASC, p.primer_nombre ASC";
+if(isset($option_report) && $option_report == 'retiros' )
+    $sql .= " ORDER BY e.fecha_retiro DESC, p.primer_apellido ASC, p.primer_nombre ASC";
+else
+    $sql .= " ORDER BY e.fecha_ingreso DESC, p.primer_apellido ASC, p.primer_nombre ASC";
 
 
 
@@ -168,6 +190,7 @@ if (!empty($params)) {
     if ($stmt) {
         mysqli_stmt_bind_param($stmt, $types, ...$params);
         mysqli_stmt_execute($stmt);
+
         $result = mysqli_stmt_get_result($stmt);
         
         if ($result) {

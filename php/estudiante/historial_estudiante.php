@@ -185,7 +185,7 @@ while ($r_e=$query_e->fetch_array())
 						  	<div style="font-size: 14px;" class="row">
 						      <div class="col-sm-6">
 						        <label for="motivo_retiro_id" >Motivo retiro: </label>
-						      	<select class="form-control" name="motivo_retiro_id" required>
+						      	<select class="form-control" name="motivo_retiro_id" readonly>
 							      	<option value="">Seleccione</option>
 							      	<?php 
 							          while ($r=$query_motivos->fetch_array()):
@@ -197,7 +197,7 @@ while ($r_e=$query_e->fetch_array())
 							        ?>
 							    </select>
 						      </div>
-						      <div class="col-sm-5">
+						      <!--div class="col-sm-5">
 						        <label for="culmino_escolaridad" >¿Culminó escolaridad?: </label>
 						      
 						           <select class="form-control" name="culmino_escolaridad" required>
@@ -205,7 +205,7 @@ while ($r_e=$query_e->fetch_array())
 								      <option value="yes">Si</option>
 								      <option value="no">No</option>
 								    </select>
-						      </div >
+						      </div -->
 						  	</div>
 						  	<br />
 						  	<div style="font-size: 14px;" class="row">
@@ -214,7 +214,7 @@ while ($r_e=$query_e->fetch_array())
 						        <textarea class="form-control" name="descripcion_motivo_retiro" readonly rows="3"><?php echo $mov->descripcion_motivo_retiro ?></textarea>
 						      </div>
 						    </div>
-						    <div style="font-size: 14px;" class="row">
+						    <!--div style="font-size: 14px;" class="row">
 						      <div class="col-sm-2">
 						        <label for="fecha_respuesta" >Fecha de respuesta: </label>
 						      </div>
@@ -227,7 +227,7 @@ while ($r_e=$query_e->fetch_array())
 						      <div class="col-sm-4" style="text-align: left">
 						          <input type="text" class="form-control" name="comunicacion_respuesta" value="<?=$mov->comunicacion_respuesta?>" readonly="1" />
 						      </div>
-						  	</div>						  
+						  	</div-->						  
 						  	<?php
 						  }
 						   elseif ($mov->tipo_mov == 4) { ?>

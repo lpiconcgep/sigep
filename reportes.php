@@ -74,7 +74,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                         <div class="feature-icon" style="width: 60px; height: 60px; margin: 0 auto 10px; background: var(--gradient-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
                             <i class="fas fa-university fa-2x"></i>
                         </div>
-                        <h4 style="font-size: 1.1rem; margin: 5px 0;">POSGRADOS</h4>
+                        <h4 style="font-size: 1.1rem; margin: 5px 0;">POSTGRADOS</h4>
                         <p style="font-size: 0.85rem; margin: 5px 0;">Programas sin actividad</p>
                         <div style="margin-top: 8px;">
                             <span class="badge" style="background-color: var(--accent-green); color: white; padding: 3px 8px; font-size: 0.75rem;">
@@ -86,7 +86,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                 
                 <!-- Reporte de Estadísticas (en desarrollo) -->
                 <div class="col-md-3">
-                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px; opacity: 0.7;" onclick="alert('Módulo en desarrollo');">
+                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px; opacity: 0.7;" onclick="window.location.href='php/reportes/retirados.php'">
                         <div class="feature-icon" style="width: 60px; height: 60px; margin: 0 auto 10px; background: var(--gradient-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
                             <i class="fas fa-chart-line fa-2x"></i>
                         </div>

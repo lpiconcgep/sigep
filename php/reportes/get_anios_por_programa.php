@@ -13,6 +13,16 @@ if (!isset($con) || !$con) {
 }
 
 $programa_id = isset($_GET['programa_id']) ? intval($_GET['programa_id']) : 0;
+$opt = isset($_GET['opt']) ? $_GET['opt'] : "";
+
+
+if($opt != "" && $opt == 'retirados')
+{
+    $aux_cad = " AND condicion_estudiante_id IN (5,6)";
+}
+else
+    $aux_cad = "";
+
 
 $anios = [];
 
@@ -22,8 +32,10 @@ if ($programa_id > 0) {
             WHERE programa_id = $programa_id 
             AND fecha_ingreso IS NOT NULL
             AND YEAR(fecha_ingreso) IS NOT NULL
+            ".$aux_cad."
             ORDER BY anio ASC";
-    
+
+    //leru();
     $result = mysqli_query($con, $sql);
     
     if ($result && mysqli_num_rows($result) > 0) {
