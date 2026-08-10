@@ -532,7 +532,7 @@ if (file_exists($navbar_path)) {
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="anioSelect"><i class="fas fa-calendar"></i> Año</label>
+                                <label for="anioSelect"><i class="fas fa-calendar"></i> Año de Ingreso</label>
                                 <select id="anioSelect" name="anio" class="form-control">
                                     <option value="">Todos</option>
                                     <?php foreach ($anios as $a): ?>
@@ -551,7 +551,6 @@ if (file_exists($navbar_path)) {
                                     <option value="">Todos</option>
                                     <option value="activo" <?php if ($estatus == 'activo') echo "selected"; ?>>Activo</option>
                                     <option value="egresado" <?php if ($estatus == 'egresado') echo "selected"; ?>>Egresado</option>
-                                    <option value="inactivo" <?php if ($estatus == 'inactivo') echo "selected"; ?>>Inactivo</option>
                                     <option value="retirado" <?php if ($estatus == 'retirado') echo "selected"; ?>>Retirado</option>
                                 </select>
                             </div>

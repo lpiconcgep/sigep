@@ -11,7 +11,7 @@ if (!$con) {
 
 // Mapeo de estatus para la consulta
 $estatus_map = [
-    'activo' => [1],
+    'activo' => [1,3,4],
     'egresado' => [2],
     'inactivo' => [3, 4],
     'retirado' => [5, 6]
@@ -19,6 +19,7 @@ $estatus_map = [
 
 // Convertir el filtro a los IDs correspondientes
 $estatus_ids = [];
+
 if (isset($estatus) && $estatus !== null && $estatus !== '' && isset($estatus_map[$estatus])) {
     $estatus_ids = $estatus_map[$estatus];
 }
@@ -59,10 +60,10 @@ $sql = "SELECT
             e.created_at as fecha_registro, 
             p.fecha_nacimiento as fecha_nacimiento,
             CASE 
-                WHEN e.estatus_estudiante_id = 1 THEN 'Activo'
-                WHEN e.estatus_estudiante_id = 2 THEN 'Egresado'
-                WHEN e.estatus_estudiante_id IN (3,4) THEN 'Inactivo'
-                WHEN e.estatus_estudiante_id IN (5,6) THEN 'Retirado/Desincorporado'
+                WHEN e.condicion_estudiante_id = 1 THEN 'Activo'
+                WHEN e.condicion_estudiante_id = 2 THEN 'Egresado'
+                WHEN e.condicion_estudiante_id IN (3,4) THEN 'Inactivo'
+                WHEN e.condicion_estudiante_id IN (5,6) THEN 'Retirado/Desincorporado'
                 ELSE 'Desconocido'
             END AS condicion_estudiante,
             f.nombre as facultad
@@ -97,24 +98,29 @@ if ($facultad !== null) {
 
 }
 if ($estatus !== null) {
-    
-    if ($estatus == 3 || $estatus == 5){
-      $sql .= " AND ce.id IN (?,?)";
-      if ($estatus == 3) {
-            $params_1 = [3, 4];
+    //var_dump($estatus);
+    //var_dump($estatus_ids);
+    if ($estatus == 'activo' || $estatus == 'retirado'){
+      
+      if ($estatus == 'activo') {
+            $params_1 = [1, 3, 4];
+            $types .= "iii";
+            $sql .= " AND ce.id IN (?,?,?)";
         }
-        if ($estatus == 5){
+        if ($estatus == 'retirado'){
             $params_1 = [5, 6];
+            $types .= "ii";
+            $sql .= " AND ce.id IN (?,?)";
         }
         if (empty($params))
             $params = $params_1;
         else
             $params = array_merge($params, $params_1);
-        $types .= "ii";
+        
     }
     else {
         $sql .= " AND ce.id = ?";
-        $params[] = $estatus;
+        $params[] = $estatus_ids[0];
         $types .= "i";
     }
       
@@ -124,7 +130,7 @@ if ($estatus !== null) {
 // Filtro por estatus (agrupado)
 if (!empty($estatus_ids)) {
     $placeholders = implode(',', array_fill(0, count($estatus_ids), '?'));
-    $sql .= " AND e.estatus_estudiante_id IN ($placeholders)";
+    $sql .= " AND e.condicion_estudiante_id IN ($placeholders)";
     foreach ($estatus_ids as $id) {
         $params[] = $id;
         $types .= "i";
@@ -142,8 +148,22 @@ if (!empty($programas_facultad)) {
 $sql .= " ORDER BY e.fecha_ingreso DESC, p.primer_apellido ASC, p.primer_nombre ASC";
 
 
+
 // Ejecutar la consulta
 if (!empty($params)) {
+
+    $debug_sql = $sql;
+    foreach ($params as $param) {
+        // Escapamos el valor por seguridad visual y determinamos si lleva comillas
+        $value = is_numeric($param) ? $param : "'" . addslashes($param) . "'";
+        // Reemplaza el primer '?' que encuentre en la cadena
+        $debug_sql = preg_replace('/\?/', $value, $debug_sql, 1);
+    }
+    // Imprime el query final en el navegador o código fuente
+   // var_dump($debug_sql); 
+    // O puedes usar: error_log($debug_sql); para enviarlo al log de errores de PHP
+    // ----------------------------------------------------
+
     $stmt = mysqli_prepare($con, $sql);
     if ($stmt) {
         mysqli_stmt_bind_param($stmt, $types, ...$params);
@@ -157,6 +177,7 @@ if (!empty($params)) {
         }
     }
 } else {
+
     $result = mysqli_query($con, $sql);
     if ($result) {
         while ($r = mysqli_fetch_assoc($result)) {
