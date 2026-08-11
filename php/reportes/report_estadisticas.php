@@ -28,6 +28,7 @@ $estatus_map = [
     'retirado' => [5, 6]
 ];
 
+
 $estatus_ids = [];
 if ($estatus && isset($estatus_map[$estatus])) {
     $estatus_ids = $estatus_map[$estatus];
@@ -37,32 +38,13 @@ if ($estatus && isset($estatus_map[$estatus])) {
 // CONSULTAS PARA FILTROS - CORREGIDAS
 // ============================================
 
-// Obtener años según filtros
-if ($programa !== null) {
-    $sqlAnios = "SELECT DISTINCT YEAR(e.fecha_ingreso) AS anio 
-                 FROM estudiante_programa e 
-                 WHERE e.programa_id = " . intval($programa) . " 
-                 ORDER BY anio ASC";
-    $resAnios = mysqli_query($con, $sqlAnios);
-} elseif ($facultad !== null) {
-    $sqlAnios = "SELECT DISTINCT YEAR(e.fecha_ingreso) AS anio 
-                 FROM estudiante_programa e
-                 INNER JOIN programa p ON e.programa_id = p.id
-                 INNER JOIN postgrado po ON p.postgrado_id = po.id
-                 WHERE po.facultad_nucleo_id = " . intval($facultad) . " 
-                 ORDER BY anio ASC";
-    $resAnios = mysqli_query($con, $sqlAnios);
-} else {
-    $sqlAnios = "SELECT DISTINCT YEAR(fecha_ingreso) AS anio FROM estudiante_programa ORDER BY anio ASC";
-    $resAnios = mysqli_query($con, $sqlAnios);
-}
 
-$anios = [];
-if ($resAnios) {
-    while ($r = mysqli_fetch_assoc($resAnios)) {
-        $anios[] = $r['anio'];
-    }
-}
+
+$anios = ['2025','2026'];
+
+
+$sqlGradoA = "SELECT * FROM grado_academico ";
+$resGradoA = mysqli_query($con, $sqlGradoA);
 
 // Obtener todos los programas (para el selector)
 $sqlProgramas = "SELECT id, nombre FROM programa ORDER BY nombre ASC";
@@ -84,11 +66,16 @@ if ($resFacultades) {
     }
 }
 
+
 // ============================================
 // CONSULTA PRINCIPAL - CORREGIDA
 // ============================================
 
-include "../query_filtro.php";
+//$option_report = "estadisticas";
+include "../query_filtro_estadisticas.php";
+
+
+
 
 // ============================================
 // FUNCIÓN PARA FORMATEAR FECHAS
@@ -112,6 +99,9 @@ if (!function_exists('transforma_fecha')) {
 if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
     crear_pdf($anio, $programa, $facultad, $estatus);
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -119,14 +109,13 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Estudiantes - SIGEP</title>
+    <title>Reporte de Retirados - SIGEP</title>
     
     <!-- Bootstrap 3 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/sigep.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     
     <script>
     // Función para cargar programas por facultad
@@ -147,7 +136,7 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
         programaSelect.innerHTML = '<option value="">Cargando programas...</option>';
         anioSelect.innerHTML = '<option value="">Cargando años...</option>';
         
-        fetch(`get_programas_por_facultad.php?facultad_id=${facultadId}`)
+        fetch(`get_programas_por_facultad.php?opt=estadisticas&facultad_id=${facultadId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Error en la respuesta del servidor');
@@ -171,21 +160,6 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
                     programaSelect.innerHTML = '<option value="">No hay programas</option>';
                 }
                 
-                // Llenar años
-                anioSelect.innerHTML = '<option value="">Todos</option>';
-                if (data.anios && data.anios.length > 0) {
-                    data.anios.forEach(anio => {
-                        const option = document.createElement('option');
-                        option.value = anio;
-                        option.textContent = anio;
-                        if (anio == anioActual) {
-                            option.selected = true;
-                        }
-                        anioSelect.appendChild(option);
-                    });
-                } else {
-                    anioSelect.innerHTML = '<option value="">No hay años</option>';
-                }
             })
             .catch(error => {
                 console.error('Error cargando programas:', error);
@@ -195,51 +169,7 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
             });
     }
     
-    // Función para cargar años según programa
-    function cargarAniosPorPrograma() {
-        const programaId = document.getElementById('programaSelect').value;
-        const anioSelect = document.getElementById('anioSelect');
-        const anioActual = '<?php echo $anio; ?>';
-        
-        if (programaId === '') {
-            // Si no hay programa seleccionado, recargar la página
-            window.location.href = window.location.pathname;
-            return;
-        }
-        
-        // Mostrar loading
-        anioSelect.innerHTML = '<option value="">Cargando años...</option>';
-        
-        fetch(`get_anios_por_programa.php?programa_id=${programaId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
-                }
-                return response.json();
-            })
-            .then(data => {
-                anioSelect.innerHTML = '<option value="">Todos</option>';
-                if (data && data.length > 0) {
-                    data.forEach(anio => {
-                        const option = document.createElement('option');
-                        option.value = anio;
-                        option.textContent = anio;
-                        if (anio == anioActual) {
-                            option.selected = true;
-                        }
-                        anioSelect.appendChild(option);
-                    });
-                } else {
-                    anioSelect.innerHTML = '<option value="">No hay años</option>';
-                }
-            })
-            .catch(error => {
-                console.error('Error cargando años:', error);
-                anioSelect.innerHTML = '<option value="">Error al cargar</option>';
-                alert('Error al cargar los años. Verifica que el archivo exista.');
-            });
-    }
-    
+   
     // Eventos
     document.addEventListener('DOMContentLoaded', function() {
         const facultadSelect = document.getElementById('facultadSelect');
@@ -270,28 +200,26 @@ if (file_exists($navbar_path)) {
 
 <div class="container" style="width: 95%; margin-top: 20px;">
     <div class="row">
-        
         <div class="col-md-12">
             
             <!-- Encabezado -->
             <div class="page-header fade-in-up">
                 <h2>
                     <i class="fas fa-chart-line" style="color: #5BC0BE; margin-right: 15px;"></i>
-                    <strong>REPORTE DE ESTUDIANTES</strong>
+                    <strong>REPORTE DE ESTADISTICAS</strong>
                 </h2>
                 <p class="text-muted">
                     <i class="fas fa-info-circle"></i> 
-                    Visualice y filtre estudiantes por facultad, programa, año y estatus
+                    Visualice y filtre postgrados por facultad, programa, año
                 </p>
 
             </div>
-
-            
+           
             <!-- Filtros -->
             <div class="filter-card fade-in-up">
                 <form method="get" class="form-horizontal">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="facultadSelect"><i class="fas fa-university"></i> Facultad</label>
                                 <select id="facultadSelect" name="facultad" class="form-control">
@@ -304,9 +232,8 @@ if (file_exists($navbar_path)) {
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="programaSelect"><i class="fas fa-graduation-cap"></i> Postgrado</label>
                                 <select id="programaSelect" name="programa" class="form-control">
@@ -322,7 +249,7 @@ if (file_exists($navbar_path)) {
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="anioSelect"><i class="fas fa-calendar"></i> Año de Ingreso</label>
+                                <label for="anioSelect"><i class="fas fa-calendar"></i> Año</label>
                                 <select id="anioSelect" name="anio" class="form-control">
                                     <option value="">Todos</option>
                                     <?php foreach ($anios as $a): ?>
@@ -334,20 +261,22 @@ if (file_exists($navbar_path)) {
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="estatusSelect"><i class="fas fa-tag"></i> Estatus</label>
-                                <select id="estatusSelect" name="estatus" class="form-control">
+                                <label for="anioSelect"><i class="fas fa-calendar"></i>Grado académico</label>
+                                <select id="gradoSelect" name="anio" class="form-control">
                                     <option value="">Todos</option>
-                                    <option value="activo" <?php if ($estatus == 'activo') echo "selected"; ?>>Activo</option>
-                                    <option value="egresado" <?php if ($estatus == 'egresado') echo "selected"; ?>>Egresado</option>
-                                    <option value="retirado" <?php if ($estatus == 'retirado') echo "selected"; ?>>Retirado</option>
+                                    <?php foreach ($resGradoA as $g): ?>
+                                        <option value="<?php echo $g['id']; ?>" 
+                                            <?php if ($gradoA !== null && $g == $gradoA) echo "selected"; ?>>
+                                            <?php echo $g['nombre']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-
+                        
+                        <div class="col-md-4">
                             <button type="submit" class="btn-filtrar">
                                 <i class="fas fa-search"></i> Filtrar
                             </button>
@@ -362,16 +291,18 @@ if (file_exists($navbar_path)) {
                             ?>" class="btn-pdf" target="_blank">
                                 <i class="fas fa-file-pdf"></i> PDF
                             </a>
-
+                            <a href="../../reportes.php" class="btn btn-warning-filter" style="margin-left: 10px;float: right;">⬅ Volver</a>
                         </div>
                     </div>
+
                 </form>
+
             </div>
             
             <!-- Tabla de resultados -->
             <div class="content-card fade-in-up">
                 <h4 class="section-title">
-                    <i class="fas fa-list"></i> Listado de Estudiantes
+                    <i class="fas fa-list"></i> Listado de Postgrados
                     <?php if (count($rows) > 0): ?>
                         <span class="badge">
                             Total: <?php echo count($rows); ?>
@@ -383,50 +314,33 @@ if (file_exists($navbar_path)) {
                     <table class="table table-hover table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-center">Documento</th>
-                                <th class="text-center">Apellidos</th>
-                                <th class="text-center">Nombres</th>
-                                <th class="text-center">Programa</th>
-                                <th class="text-center">Estatus</th>
-                                <th class="text-center">Fecha Nac.</th>
-                                <th class="text-center">Fecha Ingreso</th>
-                                <th class="text-center">Fecha Registro</th>
+                                <th class="text-center">Num</th>
+                                <th class="text-center">Nombre Programa</th>
+                            
+                                <th class="text-center">Cantidad Matricula</th>
+                                <th class="text-center">Cantidad Ingresos</th>
+                                <th class="text-center">Cantidad Egresados</th>
+                                <th class="text-center">Cantidad Retirados</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (count($rows) > 0): ?>
                                 <?php foreach ($rows as $row): ?>
                                     <tr>
-                                        <td class="text-center">
-                                            <span class="badge-doc">
-                                                <?php echo htmlspecialchars($row['documento_identidad']); ?>
-                                            </span>
-                                        </td>
-                                        <td><?php echo htmlspecialchars($row['apellidos']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['nombres']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['programa']); ?></td>
-                                        <td class="text-center">
-                                            <?php 
-                                            $estatus_clase = 'default';
-                                            if ($row['condicion_estudiante'] == 'Activo') $estatus_clase = 'success';
-                                            elseif ($row['condicion_estudiante'] == 'Egresado') $estatus_clase = 'info';
-                                            elseif ($row['condicion_estudiante'] == 'Inactivo') $estatus_clase = 'warning';
-                                            elseif ($row['condicion_estudiante'] == 'Retirado') $estatus_clase = 'danger';
-                                            ?>
-                                            <span class="label label-<?php echo $estatus_clase; ?>">
-                                                <?php echo htmlspecialchars($row['condicion_estudiante']); ?>
-                                            </span>
-                                        </td>
-                                        <td class="text-center"><?php echo transforma_fecha($row['fecha_nacimiento']); ?></td>
-                                        <td class="text-center"><?php echo transforma_fecha($row['fecha_ingreso']); ?></td>
-                                        <td class="text-center"><?php echo transforma_fecha($row['fecha_registro']); ?></td>
+                                        <td width="10%"></td>
+                                        <td width="30%"><?php echo htmlspecialchars($row['programa']); ?></td>
+    
+                                        <td class="text-center">10</td>
+                                        <td class="text-center">0</td>
+                                        <td class="text-center">1</td>
+                                        <td class="text-center">2</td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
                                     <td colspan="8" class="text-center" style="padding: 40px 0;">
                                         <i class="fas fa-info-circle" style="font-size: 2.5rem; color: var(--blue-soft); display: block; margin-bottom: 15px;"></i>
-                                        <h4 style="color: var(--blue-soft);">No se encontraron estudiantes</h4>
+                                        <h4 style="color: var(--blue-soft);">No se encontraron registros</h4>
                                         <p style="color: #999;">Para los filtros seleccionados no hay resultados.</p>
                                     </td>
                                 </tr>

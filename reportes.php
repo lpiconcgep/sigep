@@ -36,21 +36,6 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
             
             <!-- Tarjetas de reportes - Tamaño más pequeño y alineadas -->
             <div class="row" style="margin-top: 20px;">
-                <!-- Reporte de Matrícula -->
-                <div class="col-md-3">
-                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px;" onclick="window.location.href='php/reportes/matricula.php'">
-                        <div class="feature-icon" style="width: 60px; height: 60px; margin: 0 auto 10px; background: var(--gradient-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-                            <i class="fas fa-users fa-2x"></i>
-                        </div>
-                        <h4 style="font-size: 1.1rem; margin: 5px 0;">MATRÍCULA</h4>
-                        <p style="font-size: 0.85rem; margin: 5px 0;">Reporte de matrícula de estudiantes</p>
-                        <div style="margin-top: 8px;">
-                            <span class="badge" style="background-color: var(--accent-green); color: white; padding: 3px 8px; font-size: 0.75rem;">
-                                <i class="fas fa-arrow-right"></i> Ver
-                            </span>
-                        </div>
-                    </div>
-                </div>
                 
                 <!-- Reporte de Estudiantes -->
                 <div class="col-md-3">
@@ -83,18 +68,33 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                         </div>
                     </div>
                 </div>
-                
-                <!-- Reporte de Estadísticas (en desarrollo) -->
+                <!-- Reporte de Matrícula -->
                 <div class="col-md-3">
-                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px; opacity: 0.7;" onclick="window.location.href='php/reportes/retirados.php'">
+                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px;" onclick="window.location.href='php/reportes/retirados.php'">
+                        <div class="feature-icon" style="width: 60px; height: 60px; margin: 0 auto 10px; background: var(--gradient-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <h4 style="font-size: 1.1rem; margin: 5px 0;">RETIRADOS</h4>
+                        <p style="font-size: 0.85rem; margin: 5px 0;">Reporte de retirados por sistema</p>
+                        <div style="margin-top: 8px;">
+                            <span class="badge" style="background-color: var(--accent-green); color: white; padding: 3px 8px; font-size: 0.75rem;">
+                                <i class="fas fa-arrow-right"></i> Ver
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reporte de Estadísticas-->
+                <div class="col-md-3">
+                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px; opacity: 0.7;" onclick="window.location.href='php/reportes/report_estadisticas.php'">
                         <div class="feature-icon" style="width: 60px; height: 60px; margin: 0 auto 10px; background: var(--gradient-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
                             <i class="fas fa-chart-line fa-2x"></i>
                         </div>
                         <h4 style="font-size: 1.1rem; margin: 5px 0;">ESTADÍSTICAS</h4>
-                        <p style="font-size: 0.85rem; margin: 5px 0;">Módulo en desarrollo</p>
+                        <p style="font-size: 0.85rem; margin: 5px 0;">Ver estadisticas por sistema</p>
                         <div style="margin-top: 8px;">
                             <span class="badge" style="background-color: var(--gray-500); color: white; padding: 3px 8px; font-size: 0.75rem;">
-                                <i class="fas fa-clock"></i> Pronto
+                                <i class="fas fa-clock"></i> Ver
                             </span>
                         </div>
                     </div>

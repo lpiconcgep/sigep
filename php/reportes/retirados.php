@@ -353,6 +353,7 @@ if (file_exists($navbar_path)) {
                             ?>" class="btn-pdf" target="_blank">
                                 <i class="fas fa-file-pdf"></i> PDF
                             </a>
+                             <a href="../../reportes.php" class="btn btn-warning-filter" style="margin-left: 10px;float: right;">⬅ Volver</a>
                         </div>
                     </div>
                 </form>
