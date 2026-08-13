@@ -275,7 +275,6 @@ if (file_exists($navbar_path)) {
                                 </select>
                             </div>
                         </div>
-                        
                         <div class="col-md-4">
                             <button type="submit" class="btn-filtrar">
                                 <i class="fas fa-search"></i> Filtrar
@@ -294,7 +293,6 @@ if (file_exists($navbar_path)) {
                             <a href="../../reportes.php" class="btn btn-warning-filter" style="margin-left: 10px;float: right;">⬅ Volver</a>
                         </div>
                     </div>
-
                 </form>
 
             </div>

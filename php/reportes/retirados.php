@@ -323,7 +323,7 @@ if (file_exists($navbar_path)) {
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 hidden">
                             <div class="form-group">
                                 <label for="anioSelect"><i class="fas fa-calendar"></i> Año</label>
                                 <select id="anioSelect" name="anio" class="form-control">
@@ -338,7 +338,7 @@ if (file_exists($navbar_path)) {
                             </div>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-4" style="float: right;">
                             <button type="submit" class="btn-filtrar">
                                 <i class="fas fa-search"></i> Filtrar
                             </button>

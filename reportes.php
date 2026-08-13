@@ -86,7 +86,7 @@ if(isset($_SESSION['session']) && $_SESSION['session'] == 'true') {
                 
                 <!-- Reporte de Estadísticas-->
                 <div class="col-md-3">
-                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px; opacity: 0.7;" onclick="window.location.href='php/reportes/report_estadisticas.php'">
+                    <div class="feature-card fade-in-up" style="min-height: 180px; cursor: pointer; text-align: center; padding: 15px; opacity: 0.7;" onclick="alert('Módulo en desarrollo');"> <!--"window.location.href='php/reportes/report_estadisticas.php'--> 
                         <div class="feature-icon" style="width: 60px; height: 60px; margin: 0 auto 10px; background: var(--gradient-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
                             <i class="fas fa-chart-line fa-2x"></i>
                         </div>
