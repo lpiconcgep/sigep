@@ -18,6 +18,45 @@ $('#generar_pdf').click(function(e) {
     }).appendTo('body').submit();
 });
 
+function obtenerFechaHoy() {
+  const hoy = new Date();
+  const yyyy = hoy.getFullYear();
+  const mm   = String(hoy.getMonth() + 1).padStart(2, '0');
+  const dd   = String(hoy.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function inicializarFechaMaxima(selector) {
+  const input = document.querySelector(selector);
+  if (!input) return;
+  input.setAttribute('max', obtenerFechaHoy());
+}
+
+function validarFechaNoFutura(selector, mensaje) {
+  const input = document.querySelector(selector);
+  if (!input) return true;
+
+  const valor = input.value;
+  const fechaMax = obtenerFechaHoy();
+
+  // Campo vacío
+  if (!valor) {
+    alert(mensaje || 'Debe seleccionar una fecha.');
+    input.focus();
+    return false;
+  }
+
+  // Comparación de strings funciona porque el formato es YYYY-MM-DD
+  if (valor > fechaMax) {
+    alert(mensaje || 'La fecha no puede ser mayor a hoy.');
+    input.value = '';   // limpiamos el valor inválido
+    input.focus();
+    return false;
+  }
+
+  return true;
+}
+
 
 function buscar_postgrados(){
 
