@@ -6,13 +6,13 @@
 
   $user_id=null;
   
-  $sql_f= "select * from facultad_nucleo";
+  $sql_f= "select * from facultad_nucleo order by nombre asc";
   $query_f = $con->query($sql_f);
 
-  $sql0= "select * from postgrado";
+  $sql0= "select * from postgrado order by nombre asc";
   $query0 = $con->query($sql0);
 
-  $sql1= "select * from programa";
+  $sql1= "select * from programa order by nombre asc";
   $query = $con->query($sql1);
 
   $sql2= "select * from condicion_estudiante";
@@ -53,6 +53,7 @@
     <label for="email">Programa <span style='color: red'>*</span></label>
     <select class="form-control" name="programa_id"  id="select_programas" required>
       <?php 
+        echo "<option value='-1' >Seleccione programa</option>";
         while ($r=$query->fetch_array()):
           echo "<option value='".$r['id']."' >".$r['nombre']."</option>";
         endwhile;
