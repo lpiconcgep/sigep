@@ -321,10 +321,10 @@ if (file_exists($navbar_path)) {
                                         <td width="5%" class="text-center" ><?=$i?></td>
                                         <td width="30%"><?php echo htmlspecialchars($row['programa']); ?></td>
                                         <td width="5%" class="text-center">(<?=$row['abreviatura']?>)</td>
-                                        <td class="text-center">10</td>
-                                        <td class="text-center">0</td>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">2</td>
+                                        <td class="text-center"><?=$row['matricula']?></td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center"><?=$row['egresados']?></td>
+                                        <td class="text-center"><?=$row['retirados']?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
