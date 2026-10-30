@@ -10,21 +10,8 @@
 		$data['success'] = true;
 		$resultado = array();
 		
-		$sql = "select id,nombre from postgrado WHERE facultad_nucleo_id = {$_GET['valor']} order by nombre ASC";
-
-		$query = $con->query($sql);
-		if($query->num_rows>0)
-		{
-			$elementos = array();
-			while ($r1=$query->fetch_object()){
-				$elementos[] = $r1;
-			}
-		}
-		else
-		{
-			$elementos = NULL;
-		}
-
+		$elementos = consultar_postgrados($_GET['valor']);
+		
 		if($elementos != NULL)
 		{
 			foreach ($elementos as $valor) {
@@ -49,7 +36,7 @@
 		foreach ($elementos as $valor) {
 			$elemento = array();
         	$elemento['id'] = $valor->id;
-        	$elemento['nombre'] = utf8_encode($valor->nombre);
+        	$elemento['nombre'] = $valor->nombre;
         	$resultado[] = $elemento;
         } 
 
@@ -67,11 +54,27 @@
 		$data['resultado'] = $elementos;
 		$data['name'] = $name_program;
 	}
-<<<<<<< HEAD
+
+	if($accion == '4')
+	{
+		$data['success'] = true;
+		$resultado = array();
+		
+		$elementos = consultar_programas_x_facultad($_GET['valor']);
+
+		foreach ($elementos as $valor) {
+			$elemento = array();
+        	$elemento['id'] = $valor->id;
+        	$elemento['nombre'] = $valor->nombre;
+        	$resultado[] = $elemento;
+        } 
+
+		$data['resultado'] = $resultado;
+	}
 
 
-=======
-	//var_dump($data);
->>>>>>> 10412c06b9783640dcecd35d39471d762029d4e5
+
+
+
 	echo json_encode($data);
 ?>

@@ -131,7 +131,7 @@ function consultar_postgrados($facultad_id = '-1'){
 
     if($facultad_id == '-1')
     {
-        $sql = "select id,nombre,facultad_nucleo_id from postgrado order by facultad_nucleo_id,nombre ASC";
+        $sql = "select id,nombre,facultad_nucleo_id from postgrado order by nombre ASC";
     }
     else
     {
@@ -166,6 +166,42 @@ function consultar_programas($postgrado_id = '-1'){
     {
         $sql = "select id,nombre, postgrado_id from programa WHERE postgrado_id = {$postgrado_id} order by nombre ASC";
     }
+
+    $query = $con->query($sql);
+    if($query->num_rows>0){
+        $resultado = array();
+        while ($r1=$query->fetch_object()){
+            $resultado[] = $r1;
+        }
+    }
+    else
+    {
+        $resultado = NULL;
+    }
+    
+    
+    return $resultado;
+
+}
+
+function consultar_programas_x_facultad($facultad_id = '-1'){
+
+    include "conexion.php";
+
+    if($facultad_id == '-1')
+    {
+        $sql = "select pr.id,pr.nombre,pr.postgrado_id from programa pr
+                INNER JOIN postgrado post ON post.id = pr.postgrado_id
+                order by pr.nombre ASC";
+    }
+    else
+    {
+        $sql = "select pr.id,pr.nombre,pr.postgrado_id from programa pr
+                INNER JOIN postgrado post ON post.id = pr.postgrado_id
+                WHERE post.facultad_nucleo_id = {$facultad_id} 
+                order by pr.nombre ASC";
+    }
+
 
     $query = $con->query($sql);
     if($query->num_rows>0){

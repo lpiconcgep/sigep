@@ -18,21 +18,10 @@ include $base_path . "funciones.php";
 $anio = isset($_GET['anio']) && $_GET['anio'] !== '' && is_numeric($_GET['anio']) ? intval($_GET['anio']) : null;
 $programa = isset($_GET['programa']) && $_GET['programa'] !== '' && is_numeric($_GET['programa']) ? intval($_GET['programa']) : null;
 $facultad = isset($_GET['facultad']) && $_GET['facultad'] !== '' && is_numeric($_GET['facultad']) ? intval($_GET['facultad']) : null;
-$estatus = isset($_GET['estatus']) && $_GET['estatus'] !== '' ? $_GET['estatus'] : null;
-
-// Mapeo de estatus para la consulta
-$estatus_map = [
-    'activo' => [1],
-    'egresado' => [2],
-    'inactivo' => [3, 4],
-    'retirado' => [5, 6]
-];
+$gradoA = isset($_GET['grado']) && $_GET['grado'] !== '' ? $_GET['grado'] : null;
 
 
-$estatus_ids = [];
-if ($estatus && isset($estatus_map[$estatus])) {
-    $estatus_ids = $estatus_map[$estatus];
-}
+
 
 // ============================================
 // CONSULTAS PARA FILTROS - CORREGIDAS
@@ -41,7 +30,6 @@ if ($estatus && isset($estatus_map[$estatus])) {
 
 
 $anios = ['2025','2026'];
-
 
 $sqlGradoA = "SELECT * FROM grado_academico ";
 $resGradoA = mysqli_query($con, $sqlGradoA);
@@ -109,7 +97,7 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Retirados - SIGEP</title>
+    <title>Reporte de Estadisticas - SIGEP</title>
     
     <!-- Bootstrap 3 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -134,7 +122,7 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
         
         // Mostrar loading
         programaSelect.innerHTML = '<option value="">Cargando programas...</option>';
-        anioSelect.innerHTML = '<option value="">Cargando años...</option>';
+        //anioSelect.innerHTML = '<option value="">Cargando años...</option>';
         
         fetch(`get_programas_por_facultad.php?opt=estadisticas&facultad_id=${facultadId}`)
             .then(response => {
@@ -179,7 +167,7 @@ if (isset($_GET['pdf']) && $_GET['pdf'] == '1') {
         facultadSelect.addEventListener('change', cargarProgramasPorFacultad);
         
         // Evento cambio de programa
-        programaSelect.addEventListener('change', cargarAniosPorPrograma);
+        //programaSelect.addEventListener('change', cargarAniosPorPrograma);
         
         // Si hay facultad seleccionada, cargar programas automáticamente
         if (facultadSelect.value !== '') {
@@ -235,7 +223,7 @@ if (file_exists($navbar_path)) {
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label for="programaSelect"><i class="fas fa-graduation-cap"></i> Postgrado</label>
+                                <label for="programaSelect"><i class="fas fa-graduation-cap"></i> Programa de Postgrado</label>
                                 <select id="programaSelect" name="programa" class="form-control">
                                     <option value="">Todos</option>
                                     <?php foreach ($programas as $pr): ?>
@@ -247,7 +235,7 @@ if (file_exists($navbar_path)) {
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-group">
                                 <label for="anioSelect"><i class="fas fa-calendar"></i> Año</label>
                                 <select id="anioSelect" name="anio" class="form-control">
@@ -263,8 +251,8 @@ if (file_exists($navbar_path)) {
                         </div>
                          <div class="col-md-2">
                             <div class="form-group">
-                                <label for="anioSelect"><i class="fas fa-calendar"></i>Grado académico</label>
-                                <select id="gradoSelect" name="anio" class="form-control">
+                                <label for="gradoSelect"><i class="fas fa-calendar"></i>Grado académico</label>
+                                <select id="gradoSelect" name="grado" class="form-control">
                                     <option value="">Todos</option>
                                     <?php foreach ($resGradoA as $g): ?>
                                         <option value="<?php echo $g['id']; ?>" 
@@ -275,7 +263,7 @@ if (file_exists($navbar_path)) {
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <button type="submit" class="btn-filtrar">
                                 <i class="fas fa-search"></i> Filtrar
                             </button>
@@ -314,6 +302,7 @@ if (file_exists($navbar_path)) {
                             <tr>
                                 <th class="text-center">Num</th>
                                 <th class="text-center">Nombre Programa</th>
+                                <th class="text-center">Grado académico</th>
                             
                                 <th class="text-center">Cantidad Matricula</th>
                                 <th class="text-center">Cantidad Ingresos</th>
@@ -322,12 +311,16 @@ if (file_exists($navbar_path)) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (count($rows) > 0): ?>
-                                <?php foreach ($rows as $row): ?>
+                            <?php if (count($rows) > 0): 
+                                $i = 0; ?>
+                                <?php foreach ($rows as $row): 
+                                    $i++;
+                                    
+                                    ?>
                                     <tr>
-                                        <td width="10%"></td>
+                                        <td width="5%" class="text-center" ><?=$i?></td>
                                         <td width="30%"><?php echo htmlspecialchars($row['programa']); ?></td>
-    
+                                        <td width="5%" class="text-center">(<?=$row['abreviatura']?>)</td>
                                         <td class="text-center">10</td>
                                         <td class="text-center">0</td>
                                         <td class="text-center">1</td>

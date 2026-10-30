@@ -29,7 +29,7 @@
 <form role="form" method="post" action="./php/estudiante/agregar.php">
   <div class="form-group col-sm-12">
     <label for="email">Facultad <span style='color: red'>*</span></label>
-    <select class="form-control" name="facultad_id" id="select_facultades" onchange="javascript:buscar_postgrados()" required>
+    <select class="form-control" name="facultad_id" id="select_facultades" onchange="javascript:buscar_postgrados(); update_programasxFacultad()" required>
       <?php 
         echo "<option value='-1' >Todos</option>";
         while ($r_f=$query_f->fetch_array()):

@@ -56,7 +56,7 @@ function buscar_postgrados(){
 
 	$.ajax({
             data:  parametros,
-            url:   '/sigep_prototipo/php/lib/utilidades_ajax.php',
+            url:   './php/lib/utilidades_ajax.php', // estoy aqui
             type:  'get',
             dataType: 'json', 
             //contentType: "application/json",
@@ -87,86 +87,59 @@ function buscar_postgrados(){
                 } else {
                     $("#select_postgrados").append("<option value='-1'>Sin datos</option>");
                 }
+            }
 
+        });
+}
 
+function update_programasxFacultad(){
 
+    var facultad_id = $("#select_facultades option:selected").val();
 
-                /*
+ var parametros = {
+            "accion" : 4,
+            "valor" : facultad_id
+    };
+
+    $.ajax({
+            data:  parametros,
+            url:   '/sigep_prototipo/php/lib/utilidades_ajax.php',
+            type:  'get',
+            //dataType: 'json', 
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function () {
+                $('#select_programas option').each(function() {
+                    $(this).remove();
+                });
+
+                $("#select_programas").append("<option value='-1'>Cargando programas...</option>");
+            },
+            success:  function (data) {
+
+                var datos = jQuery.parseJSON(data);
+                var i = 0;
+                
                 if(datos["success"])
                 {
-                    $('#select_postgrados option').each(function() {
+                    $('#select_programas option').each(function() {
                         $(this).remove();
                     });
-
-                    $("#select_postgrados").append("<option value='-1'>Todos</option>");
+                    
+                    $("#select_programas").append("<option value='-1'>Todos</option>");
 
                     for (var resul in datos["resultado"])
                     {
-                        $("#select_postgrados").append("<option value='"+datos['resultado'][i]['id']+"'>"+datos['resultado'][i]['nombre']+"</option>");
+                        $("#select_programas").append("<option value='"+datos['resultado'][i]['id']+"'>"+datos['resultado'][i]['nombre']+"</option>");
+                        
                         i++;
                     }
-                }*/
-
-            },
-            /*error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("❌ Error en la petición!");
-                    console.error("Estado:", textStatus);
-                    console.error("Error:", errorThrown);
-                    console.error("Código HTTP:", jqXHR.status);
-                    console.error("Respuesta del servidor:", jqXHR.responseText);
-                    
-                    // Mostrar mensaje de error según el código HTTP
-                    var mensajeError = '';
-                    switch(jqXHR.status) {
-                        case 0:
-                            mensajeError = 'No se pudo conectar al servidor';
-                            break;
-                        case 400:
-                            mensajeError = 'Solicitud incorrecta';
-                            break;
-                        case 403:
-                            mensajeError = 'No tienes permisos para esta acción';
-                            break;
-                        case 404:
-                            mensajeError = 'El recurso no existe';
-                            break;
-                        case 500:
-                            mensajeError = 'Error interno del servidor';
-                            break;
-                        default:
-                            mensajeError = 'Error al procesar la solicitud';
-                    }
-                    
-                    alert('Error: ' + mensajeError);
-                    
-                    // Mostrar mensaje en el select
-                    $('#select_postgrados')
-                        .empty()
-                        .append('<option value="-1">Error al cargar datos</option>');
-                },
-                
-                // Siempre se ejecuta, haya éxito o error
-                complete: function(jqXHR, textStatus) {
-                    console.log("🏁 Petición completada");
-                    console.log("Estado final:", textStatus);
-                    console.log("Headers de respuesta:", jqXHR.getAllResponseHeaders());
-                    
-                    // Ocultar loader siempre
-                    $('#loader').hide();
-                    $('#select_postgrados').prop('disabled', false);
-                    
-                    // Log para debugging
-                    if(textStatus === 'success') {
-                        console.log("✅ La petición fue exitosa");
-                    } else {
-                        console.log("❌ La petición falló o fue abortada");
-                    }
-                }*/
+                }
 
 
-
-
+            }
         });
+
+
 }
 
 function buscar_programas(){
