@@ -16,7 +16,7 @@ function agregar_movimiento($POST = NULL, $tipo = NULL){
         }
 
         $estudiante_programa_id = $resultado_id_insert[0]['estudiante_programa_id'];    
-        $sql_mov = "insert into movimiento_estudiante(estudiante_programa_id, tipo_movimiento_id,created_at,user_create) value (".$estudiante_programa_id.",".$tipo.",NOW(),".$_SESSION['user_id'].")";
+        $sql_mov = "insert into movimiento_estudiante(estudiante_programa_id, tipo_movimiento_id,estadistica_movimiento_id,created_at,user_create) value (".$estudiante_programa_id.",".$tipo.",".$_POST['estadistica_id'].",NOW(),".$_SESSION['user_id'].")";
 
         $query_mov = $con->query($sql_mov);
         if($query_mov!=null){
@@ -40,7 +40,7 @@ function agregar_movimiento($POST = NULL, $tipo = NULL){
         }
     }
     elseif ($tipo == "2") { /* OPCION == 2 -> EGRESAR ESTUDIANTE */
-        var_dump("entro a funciones linea 43");
+        
         $estudiante_programa_id = $_POST['id'];    
         $sql_mov = "insert into movimiento_estudiante(estudiante_programa_id, tipo_movimiento_id,created_at,user_create) value (".$estudiante_programa_id.",".$tipo.",NOW(),".$_SESSION['user_id'].")";
 
@@ -72,7 +72,7 @@ function agregar_movimiento($POST = NULL, $tipo = NULL){
     elseif ($tipo == 3) { /* OPCION == 3 -> RETIRO ESTUDIANTE */
 
         $estudiante_programa_id = $_POST['id'];    
-        $sql_mov = "insert into movimiento_estudiante(estudiante_programa_id, tipo_movimiento_id,created_at,user_create) value (".$estudiante_programa_id.",".$tipo.",NOW(),".$_SESSION['user_id'].")";
+        $sql_mov = "insert into movimiento_estudiante(estudiante_programa_id, tipo_movimiento_id,estadistica_movimiento_id,created_at,user_create) value (".$estudiante_programa_id.",".$tipo.",".$_POST['estadistica_id'].",NOW(),".$_SESSION['user_id'].")";
 
         $query_mov = $con->query($sql_mov);
         if($query_mov!=null){
