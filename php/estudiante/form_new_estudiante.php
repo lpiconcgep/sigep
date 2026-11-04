@@ -24,7 +24,7 @@
   $sql4= "select * from estatus_matriculacion";
   $query4 = $con->query($sql4);
 
-  $sql5= "select e.* from estadisticas_movimiento em INNER JOIN estadisticas e ON em.estadistica_id = e.id WHERE em.status = 'active' AND tipo_movimiento_id = 1";
+  $sql5= "select e.* from estadisticas_movimiento em INNER JOIN estadisticas e ON em.estadistica_id = e.id WHERE em.status = 'active' AND tipo_movimiento_id = 1 order by id DESC";
   $query5 = $con->query($sql5);
 
 ?>
