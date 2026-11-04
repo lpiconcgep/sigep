@@ -24,8 +24,15 @@
   $sql4= "select * from estatus_matriculacion";
   $query4 = $con->query($sql4);
 
-?>
+  $sql5= "select e.* from estadisticas_movimiento em INNER JOIN estadisticas e ON em.estadistica_id = e.id WHERE em.status = 'active' AND tipo_movimiento_id = 1 order by id DESC";
+  $query5 = $con->query($sql5);
 
+?>
+<script type="text/javascript">
+  $(document).ready(function () {
+    inicializarFechaMaxima('input[name="fecha_ingreso"]');
+  });
+</script>
 <form role="form" method="post" action="./php/estudiante/agregar.php">
   <div class="form-group col-sm-12">
     <label for="email">Facultad <span style='color: red'>*</span></label>
@@ -53,7 +60,7 @@
     <label for="email">Programa <span style='color: red'>*</span></label>
     <select class="form-control" name="programa_id"  id="select_programas" required>
       <?php 
-        echo "<option value='-1' >Seleccione programa</option>";
+        echo "<option value='' >Seleccione programa</option>";
         while ($r=$query->fetch_array()):
           echo "<option value='".$r['id']."' >".$r['nombre']."</option>";
         endwhile;
@@ -84,9 +91,16 @@
     <label for="name">Fecha Ingreso <span style='color: red'>*</span></label>
     <input type="date" class="form-control" name="fecha_ingreso" required>
   </div>
-   <div class="form-group col-sm-6">
-    <label for="name">A&ntilde;o Cohorte </label>
-    <input type="text" class="form-control" name="anio_cohorte" >
+  <div class="form-group col-sm-6">
+    <label for="estadisticas">Mes de Estadistica <span style='color: red'>*</span></label>
+    <select class="form-control" name="estadisticas" required>
+      <?php 
+        echo "<option value='' >Seleccione</option>";
+        while ($r=$query5->fetch_array()):
+          echo "<option value='".$r['id']."' >".$r['description']."</option>";
+        endwhile;
+      ?>
+    </select>
   </div>
 
   <div class="form-group col-sm-11">
