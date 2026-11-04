@@ -92,8 +92,8 @@
     <input type="date" class="form-control" name="fecha_ingreso" required>
   </div>
   <div class="form-group col-sm-6">
-    <label for="estadisticas">Mes de Estadistica <span style='color: red'>*</span></label>
-    <select class="form-control" name="estadisticas" required>
+    <label for="estadistica_id">Mes de Estadistica <span style='color: red'>*</span></label>
+    <select class="form-control" name="estadistica_id" required>
       <?php 
         echo "<option value='' >Seleccione</option>";
         while ($r=$query5->fetch_array()):
