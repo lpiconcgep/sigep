@@ -242,7 +242,7 @@ function buscar_programas(){
                         $(this).remove();
                     });
 
-                    $("#select_programas").append("<option value='-1'>Todos</option>");
+                    $("#select_programas").append("<option value=''>Seleccione programa</option>");
 
                     for (var resul in datos["resultado"])
                     {

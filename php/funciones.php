@@ -31,12 +31,15 @@ function agregar_movimiento($POST = NULL, $tipo = NULL){
             }
 
             $movimiento_estudiante_id = $con->insert_id;
+
+            $_POST['anio_cohorte'] = NULL;
             
             $sql_desc = "INSERT INTO descripcion_movimiento(movimiento_estudiante_id,descripcion,".$set.", created_at,user_create) VALUES (";
 
             $sql_desc = $sql_desc.$movimiento_estudiante_id.",'".$tipo_movimiento."','".$_POST['fecha_ingreso']."','".$_POST['anio_cohorte']."','".$_POST['observaciones']."',NOW(),".$_SESSION['user_id'].")";
 
-            $query_desc_mov = $con->query($sql_desc);    
+            $query_desc_mov = $con->query($sql_desc);  
+
         }
     }
     elseif ($tipo == "2") { /* OPCION == 2 -> EGRESAR ESTUDIANTE */

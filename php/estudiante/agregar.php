@@ -9,6 +9,7 @@ if(!empty($_POST))
 		if($_POST["programa_id"]!="" && $_POST["condicion_estudiante_id"]!="" && $_POST["estatus_estudiante_id"]!="" 
 		&& $_POST["fecha_ingreso"]!="" )
 		{
+			$_POST['anio_cohorte'] = NULL;
 			include "../conexion.php";
 			include "../funciones.php";
 
